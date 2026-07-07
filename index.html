@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>LeanR · Executive Retention Intelligence</title>
+<style>*{box-sizing:border-box}html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<style>
+/* ============================ TOKENS ============================ */
+:root{
+  --bg:#f7f8fa; --plane:#eef0f4; --surface:#ffffff; --surface-2:#fbfcfd;
+  --ink:#0c1116; --ink-2:#465061; --muted:#8a93a3; --hair:#e4e7ec; --hair-2:#eef1f5;
+  --accent:#2a78d6; --accent-soft:#eaf2fc; --accent-ink:#1a56a0;
+  --good:#0ca30c; --good-ink:#0a7d0a; --warn:#e0930b; --warn-ink:#8a5a00;
+  --serious:#e2703f; --serious-ink:#b04a1f; --crit:#d03b3b; --crit-ink:#a52222;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --s4:#4a3aa7;
+  --ring:rgba(12,17,22,.10); --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.05);
+  --shadow-lg:0 8px 28px rgba(16,24,40,.10);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SFMono-Regular","Cascadia Code","Segoe UI Mono",ui-monospace,Menlo,Consolas,monospace;
+  --heat-0:#f4f8fe; --heat-1:#cde2fb; --heat-2:#9ec5f4; --heat-3:#5598e7; --heat-4:#2a78d6; --heat-5:#184f95; --heat-6:#0d366b;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0d0f12; --plane:#070809; --surface:#16191e; --surface-2:#1b1f25;
+    --ink:#f4f6f9; --ink-2:#b3bccb; --muted:#7d8695; --hair:#262b32; --hair-2:#1e2228;
+    --accent:#3987e5; --accent-soft:#132638; --accent-ink:#7fb3f0;
+    --good:#0ca30c; --good-ink:#3cc93c; --warn:#f0a92a; --warn-ink:#f0b95a;
+    --serious:#ec835a; --serious-ink:#f0a07f; --crit:#e05555; --crit-ink:#f07575;
+    --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#9085e9;
+    --ring:rgba(255,255,255,.10); --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 10px 34px rgba(0,0,0,.55);
+    --heat-0:#121a24; --heat-1:#15304d; --heat-2:#184f95; --heat-3:#256abf; --heat-4:#3987e5; --heat-5:#6da7ec; --heat-6:#9ec5f4;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f7f8fa; --plane:#eef0f4; --surface:#ffffff; --surface-2:#fbfcfd;
+  --ink:#0c1116; --ink-2:#465061; --muted:#8a93a3; --hair:#e4e7ec; --hair-2:#eef1f5;
+  --accent:#2a78d6; --accent-soft:#eaf2fc; --accent-ink:#1a56a0;
+  --good:#0ca30c; --good-ink:#0a7d0a; --warn:#e0930b; --warn-ink:#8a5a00;
+  --serious:#e2703f; --serious-ink:#b04a1f; --crit:#d03b3b; --crit-ink:#a52222;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --s4:#4a3aa7;
+  --ring:rgba(12,17,22,.10);
+  --heat-0:#f4f8fe; --heat-1:#cde2fb; --heat-2:#9ec5f4; --heat-3:#5598e7; --heat-4:#2a78d6; --heat-5:#184f95; --heat-6:#0d366b;
+}
+:root[data-theme="dark"]{
+  --bg:#0d0f12; --plane:#070809; --surface:#16191e; --surface-2:#1b1f25;
+  --ink:#f4f6f9; --ink-2:#b3bccb; --muted:#7d8695; --hair:#262b32; --hair-2:#1e2228;
+  --accent:#3987e5; --accent-soft:#132638; --accent-ink:#7fb3f0;
+  --good:#0ca30c; --good-ink:#3cc93c; --warn:#f0a92a; --warn-ink:#f0b95a;
+  --serious:#ec835a; --serious-ink:#f0a07f; --crit:#e05555; --crit-ink:#f07575;
+  --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#9085e9;
+  --ring:rgba(255,255,255,.10); --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 10px 34px rgba(0,0,0,.55);
+  --heat-0:#121a24; --heat-1:#15304d; --heat-2:#184f95; --heat-3:#256abf; --heat-4:#3987e5; --heat-5:#6da7ec; --heat-6:#9ec5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.tnum{font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:650;letter-spacing:-.01em}
+a{color:inherit}
+::selection{background:var(--accent-soft)}
+
+/* ============================ LAYOUT ============================ */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--hair);display:flex;flex-direction:column;overflow-y:auto;z-index:40}
+.brand{padding:20px 20px 16px;border-bottom:1px solid var(--hair);display:flex;gap:11px;align-items:center}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,var(--accent),#1a56a0);display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px;flex:none;box-shadow:var(--shadow)}
+.brand .bt{font-size:14.5px;font-weight:750;letter-spacing:-.02em;line-height:1.15}
+.brand .bs{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;font-weight:600}
+.nav{padding:10px 12px;display:flex;flex-direction:column;gap:1px;flex:1}
+.nav .grp{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.11em;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:13px;font-weight:550;transition:background .12s,color .12s}
+.nav a .ic{width:16px;height:16px;flex:none;opacity:.85}
+.nav a:hover{background:var(--plane);color:var(--ink)}
+.nav a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:650}
+.nav a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.side-foot{padding:14px 16px;border-top:1px solid var(--hair);font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.src-badge{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--ink-2)}
+.src-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--good)}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--hair);padding:11px 26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tb-title{font-size:13px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:9px}
+.tb-title b{color:var(--ink);font-weight:700}
+.spacer{flex:1}
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fl{display:flex;flex-direction:column;gap:2px}
+.fl label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-left:2px}
+select,.btn{font-family:var(--sans);font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:6px 10px;cursor:pointer;transition:border-color .12s,background .12s}
+select:hover,.btn:hover{border-color:var(--accent)}
+select:focus-visible,.btn:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.btn.p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.p:hover{background:#1a56a0}
+.btn.sm{padding:5px 9px;font-size:11.5px}
+
+.content{padding:26px;max-width:1360px;width:100%;margin:0 auto}
+section.view{scroll-margin-top:74px;margin-bottom:14px;padding-top:14px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:26px 0 16px;flex-wrap:wrap}
+.sec-head:first-child{margin-top:4px}
+.eyebrow{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:var(--accent-ink);display:flex;align-items:center;gap:8px}
+.sec-head h2{font-size:22px;margin-top:5px;letter-spacing:-.02em}
+.sec-head p{color:var(--ink-2);font-size:13px;max-width:640px;margin-top:4px}
+
+/* ============================ PRIMITIVES ============================ */
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow)}
+.card.pad{padding:18px}
+.grid{display:grid;gap:14px}
+.chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:2px}
+.chart-title{font-size:14px;font-weight:680;letter-spacing:-.01em}
+.chart-sub{font-size:11.5px;color:var(--muted);margin-top:2px;font-weight:500}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.chip.fact{background:var(--accent-soft);color:var(--accent-ink)}
+.chip.ai{background:color-mix(in srgb,var(--s4) 15%,transparent);color:var(--s4)}
+.chip.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good-ink)}
+.chip.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn-ink)}
+.chip.serious{background:color-mix(in srgb,var(--serious) 20%,transparent);color:var(--serious-ink)}
+.chip.crit{background:color-mix(in srgb,var(--crit) 16%,transparent);color:var(--crit-ink)}
+.chip.ghost{background:var(--plane);color:var(--ink-2)}
+.chip .d{width:7px;height:7px;border-radius:2px}
+
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
+.kpi{background:var(--surface);border:1px solid var(--hair);border-radius:13px;padding:15px 16px 14px;position:relative;overflow:hidden;box-shadow:var(--shadow);cursor:default;transition:transform .14s,box-shadow .14s,border-color .14s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--ring)}
+.kpi .stripe{position:absolute;left:0;top:0;bottom:0;width:3px}
+.kpi .kl{font-size:11px;color:var(--ink-2);font-weight:600;display:flex;align-items:center;gap:6px}
+.kpi .kl .info{margin-left:auto;width:15px;height:15px;border-radius:50%;border:1px solid var(--hair);color:var(--muted);font-size:9.5px;display:grid;place-items:center;cursor:help;font-weight:700}
+.kpi .kv{font-size:29px;font-weight:730;letter-spacing:-.03em;margin:7px 0 2px;line-height:1}
+.kpi .kv small{font-size:14px;font-weight:600;color:var(--muted);letter-spacing:0}
+.kpi .ksub{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.delta{display:inline-flex;align-items:center;gap:2px;font-weight:700;font-size:11px}
+.delta.up{color:var(--good-ink)} .delta.down{color:var(--crit-ink)} .delta.flat{color:var(--muted)}
+
+/* Stat mini */
+.statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--surface)}
+.stat{padding:14px 16px;border-right:1px solid var(--hair)}
+.stat:last-child{border-right:none}
+.stat .sl{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stat .sv{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.stat .sm{font-size:11px;color:var(--ink-2);margin-top:2px}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--hair)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--hair-2);white-space:nowrap}
+th{background:var(--surface-2);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2);font-weight:700;position:sticky;top:0;z-index:1}
+th:first-child,td:first-child{text-align:left;font-weight:600}
+tbody tr:hover,tbody tr:hover{background:var(--plane)}
+tbody tr:hover{background:var(--plane)}
+td.hl{font-weight:700}
+.year-band td:first-child{color:var(--accent-ink);font-weight:750}
+.blank-cell{color:var(--muted);opacity:.4}
+
+/* heatmap */
+.heat-cell{transition:opacity .15s}
+.dim{opacity:.22}
+
+/* insight blocks */
+.insight{display:flex;gap:13px;padding:15px 16px;border:1px solid var(--hair);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.insight .mk{width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px}
+.insight h4{font-size:13.5px;margin-bottom:3px}
+.insight p{font-size:12.5px;color:var(--ink-2);margin:0}
+.insight .ev{font-size:11.5px;color:var(--muted);margin-top:6px;padding-top:6px;border-top:1px dashed var(--hair)}
+.insight .ev b{color:var(--ink-2)}
+
+/* red flag rows */
+.flag{border:1px solid var(--hair);border-left-width:4px;border-radius:11px;padding:14px 16px;background:var(--surface);box-shadow:var(--shadow)}
+.flag.crit{border-left-color:var(--crit)} .flag.serious{border-left-color:var(--serious)}
+.flag.warn{border-left-color:var(--warn)} .flag.good{border-left-color:var(--good)}
+.flag-top{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.flag h4{font-size:13.5px}
+.flag .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px}
+.flag .meta div{min-width:0}
+.flag .meta .mlab{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.flag .meta .mval{color:var(--ink-2);font-weight:550;margin-top:1px}
+
+/* recommendation */
+.rec{border:1px solid var(--hair);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.rec-h{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none}
+.rec-h:hover{background:var(--plane)}
+.rec-h .cat{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink)}
+.rec-h h4{font-size:13px;flex:1;min-width:0}
+.rec-b{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s ease}
+.rec.open .rec-b{max-height:520px;padding:4px 16px 16px}
+.rec-b .row{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:7px 0;border-bottom:1px dashed var(--hair);font-size:12.5px}
+.rec-b .row:last-child{border-bottom:none}
+.rec-b .row .k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding-top:1px}
+.pri{font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px}
+.pri.p0{background:color-mix(in srgb,var(--crit) 16%,transparent);color:var(--crit-ink)}
+.pri.p1{background:color-mix(in srgb,var(--serious) 18%,transparent);color:var(--serious-ink)}
+.pri.p2{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn-ink)}
+
+/* callouts */
+.callout{border:1px solid var(--hair);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--ink-2);background:var(--surface-2);display:flex;gap:11px}
+.callout .i{flex:none;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:12px}
+.callout.note .i{background:var(--accent-soft);color:var(--accent-ink)}
+.callout.warn{background:color-mix(in srgb,var(--warn) 8%,var(--surface))}
+.callout.warn .i{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn-ink)}
+.na{color:var(--muted);font-style:italic}
+
+/* tooltip */
+#tip{position:fixed;z-index:100;pointer-events:none;background:var(--ink);color:var(--bg);padding:8px 11px;border-radius:8px;font-size:11.5px;line-height:1.45;max-width:260px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(4px);transition:opacity .12s;font-weight:500}
+#tip.on{opacity:1;transform:translateY(0)}
+#tip b{color:#fff}
+:root[data-theme="dark"] #tip,:root:not([data-theme="light"]) #tip{background:#f4f6f9;color:#0c1116}
+@media (prefers-color-scheme:dark){#tip{background:#f4f6f9;color:#0c1116}}
+:root[data-theme="light"] #tip{background:#0c1116;color:#f7f8fa}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-2);font-weight:550}
+.legend .sw{width:11px;height:11px;border-radius:3px;flex:none}
+.legend .ln{width:16px;height:3px;border-radius:2px;flex:none}
+
+svg{display:block;width:100%;height:auto}
+.gridline{stroke:var(--hair);stroke-width:1}
+.axis-txt{fill:var(--muted);font-size:10px;font-family:var(--sans)}
+.axis-txt.tnum{font-variant-numeric:tabular-nums}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:1080px){.two-col,.three-col{grid-template-columns:1fr}}
+@media (max-width:1180px){.app{grid-template-columns:0 1fr}.sidebar{position:fixed;left:0;top:0;width:248px;transform:translateX(-100%);transition:transform .2s;box-shadow:var(--shadow-lg)}.sidebar.open{transform:none}.menu-btn{display:inline-flex!important}}
+.menu-btn{display:none}
+@media print{
+  .sidebar,.topbar,.no-print{display:none!important}
+  .app{grid-template-columns:1fr} .content{max-width:none;padding:0}
+  .card,.kpi,.insight,.flag,.rec{box-shadow:none;break-inside:avoid}
+  section.view{page-break-inside:auto} body{background:#fff}
+}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:35}
+.scrim.on{display:block}
+.footnote{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
+.divider{height:1px;background:var(--hair);margin:6px 0}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.rank-badge{font-size:10px;font-weight:800;width:20px;height:20px;border-radius:6px;display:inline-grid;place-items:center}
+</style>
+
+<div id="tip" role="status" aria-live="polite"></div>
+<div class="scrim" id="scrim" onclick="toggleNav(false)"></div>
+
+<div class="app">
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">L</div>
+      <div>
+        <div class="bt">LeanR</div>
+        <div class="bs">Retention Intel</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav" aria-label="Dashboard sections">
+      <div class="grp">Overview</div>
+      <a href="#summary" class="active"><span class="ic">◈</span>Executive Summary</a>
+      <a href="#kpis"><span class="ic">▦</span>KPI Dashboard</a>
+      <div class="grp">Analytics</div>
+      <a href="#cohort"><span class="ic">▤</span>Cohort Triangle</a>
+      <a href="#retention"><span class="ic">📉</span>Retention Analytics</a>
+      <a href="#funnel"><span class="ic">▽</span>Renewal Funnel</a>
+      <a href="#periods"><span class="ic">▣</span>Quarter &amp; Year</a>
+      <div class="grp">Intelligence</div>
+      <a href="#forecast"><span class="ic">◔</span>Forecast</a>
+      <a href="#risk"><span class="ic">⚑</span>Risk Analysis</a>
+      <a href="#ai"><span class="ic">✦</span>AI Insights</a>
+      <a href="#recs"><span class="ic">◎</span>Recommendations</a>
+      <div class="grp">Data</div>
+      <a href="#data"><span class="ic">▥</span>Executive Data Table</a>
+      <a href="#exports"><span class="ic">↧</span>Exports &amp; Method</a>
+    </nav>
+    <div class="side-foot">
+      <span class="src-badge"><span class="dot"></span>Source: uploaded cohort image</span>
+      <span>25 cohorts · Jun 2024 → Jun 2026</span>
+      <span>Facts computed live · AI clearly labelled</span>
+    </div>
+  </aside>
+
+  <!-- ============================ MAIN ============================ -->
+  <div class="main">
+    <div class="topbar">
+      <button class="btn sm menu-btn" onclick="toggleNav(true)" aria-label="Open navigation">☰</button>
+      <div class="tb-title"><b>Executive Retention Intelligence</b><span id="crumb" class="no-print">Executive Summary</span></div>
+      <div class="spacer"></div>
+      <div class="filters" id="filters">
+        <div class="fl"><label for="fY">Year</label>
+          <select id="fY"><option value="all">All years</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select></div>
+        <div class="fl"><label for="fQ">Quarter</label>
+          <select id="fQ"><option value="all">All quarters</option><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></div>
+        <div class="fl"><label for="fS">Renewal stage</label>
+          <select id="fS"><option value="r1">1st Renewal</option><option value="r2">2nd Renewal</option><option value="r3">3rd Renewal</option><option value="r4">4th Renewal</option></select></div>
+        <div class="fl"><label for="fR">Rolling avg</label>
+          <select id="fR"><option value="0">Off</option><option value="3">3-month</option><option value="6">6-month</option></select></div>
+        <div class="fl"><label>&nbsp;</label><button class="btn sm" onclick="resetFilters()" title="Reset all filters">↺ Reset</button></div>
+        <div class="fl"><label for="themeBtn">&nbsp;</label><button id="themeBtn" class="btn sm" onclick="toggleTheme()" title="Toggle light / dark">◐</button></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- ==================== EXECUTIVE SUMMARY ==================== -->
+      <section class="view" id="summary">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow"><span class="chip fact">FACT</span> Board Briefing</div>
+            <h2>Executive Summary — Retention is the #1 business risk</h2>
+            <p>A single, unambiguous signal dominates the data: LeanR loses the overwhelming majority of customers at the very first renewal, and the first-renewal rate has been <b>declining month over month</b> across the observation window.</p>
+          </div>
+          <div class="pill-row"><span class="chip ghost">Jun 2024 → Jun 2026</span><span class="chip ghost">25 cohorts</span></div>
+        </div>
+
+        <!-- hero + gauges -->
+        <div class="grid" style="grid-template-columns:1.15fr .85fr;gap:14px" id="heroWrap">
+          <div class="card pad" style="display:flex;flex-direction:column;justify-content:space-between">
+            <div class="chart-head">
+              <div>
+                <div class="chart-title">First-Renewal Rate — the make-or-break metric</div>
+                <div class="chart-sub">% of new purchasers who buy a second time (all cohorts with observed renewal)</div>
+              </div>
+              <span class="chip fact">FACT</span>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:20px;margin:14px 0 10px;flex-wrap:wrap">
+              <div>
+                <div class="tnum" style="font-size:56px;font-weight:760;letter-spacing:-.04em;line-height:.9" id="heroR1">—</div>
+                <div class="ksub" style="margin-top:6px">Overall average 1st renewal · <span id="heroChurn" style="color:var(--crit-ink);font-weight:700">—</span> churn after first cycle</div>
+              </div>
+              <div style="flex:1;min-width:240px" id="heroSpark"></div>
+            </div>
+            <div class="statrow" id="heroStats"></div>
+          </div>
+          <div class="card pad">
+            <div class="chart-head"><div class="chart-title">Business Health Index</div><span class="chip ai">MODEL</span></div>
+            <div class="chart-sub" style="margin-bottom:6px">Composite of level, trend, depth &amp; stability — a constructed index, not a reported fact.</div>
+            <div id="healthGauge"></div>
+          </div>
+        </div>
+
+        <div class="three-col" style="margin-top:14px">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Retention Score</div><span class="chip ai">MODEL</span></div><div id="gaugeRet"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Renewal Depth Score</div><span class="chip ai">MODEL</span></div><div id="gaugeDepth"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Risk Score</div><span class="chip ai">MODEL</span></div><div id="gaugeRisk"></div></div>
+        </div>
+
+        <div class="sec-head"><div><div class="eyebrow"><span class="chip ai">AI</span> Leadership Read</div><h2 style="font-size:18px">What the numbers mean for leadership</h2></div></div>
+        <div class="two-col" id="leadRead"></div>
+
+        <div class="callout warn" style="margin-top:14px">
+          <span class="i">!</span>
+          <div><b>Critical analyst caveat — read before acting on the trend.</b> Renewals occur <i>over time</i>. The most recent cohorts (late-2025 → 2026) have not yet passed through their full renewal window, so their low renewal rates are partly <b>right-censoring</b> (incomplete observation), not only genuine deterioration. The declining trend is therefore a <b>blend</b> of (a) real weakening visible in mature cohorts and (b) young cohorts still in flight. Every forecast below is flagged accordingly. This distinction is observed evidence vs. interpretation — treat it as such.</div>
+        </div>
+      </section>
+
+      <!-- ==================== KPI DASHBOARD ==================== -->
+      <section class="view" id="kpis">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> Reproducible Metrics</div>
+          <h2>KPI Dashboard</h2>
+          <p>Every card is computed live from the uploaded cohort image and honors the filters above. Hover the <b>ⓘ</b> for the exact formula, business meaning &amp; data source.</p></div>
+          <span class="chip ghost" id="kpiScope">Scope: all cohorts</span>
+        </div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="footnote">All percentages are “% of the original New-Purchase cohort”, exactly as supplied. Averages are simple means over cohorts that have an observed (non-blank) value for that stage — blanks are excluded, never treated as zero. Stage-level averages are affected by cohort maturity; see the Funnel section for a maturity-matched view.</div>
+      </section>
+
+      <!-- ==================== COHORT TRIANGLE ==================== -->
+      <section class="view" id="cohort">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> True Cohort Analysis</div>
+          <h2>Cohort Retention Triangle</h2>
+          <p>Rows = purchase month. Columns = renewal stage. Colour encodes retention magnitude on one blue scale, so the funnel decay is visible at a glance. Future / unreached stages are <b>blank — never zero</b>.</p></div>
+          <div class="legend" id="heatLegend"></div>
+        </div>
+        <div class="card pad" style="overflow-x:auto"><div id="cohortTriangle"></div></div>
+        <div class="two-col" style="margin-top:14px">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Strongest vs Weakest Cohorts</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:8px">Ranked by 1st-renewal rate. Endpoints labelled.</div><div id="bestWorst"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Renewal Depth by Cohort</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:8px">How far each cohort travels down the funnel. Deep bars = loyal cohorts.</div><div id="depthChart"></div></div>
+        </div>
+      </section>
+
+      <!-- ==================== RETENTION ANALYTICS ==================== -->
+      <section class="view" id="retention">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> Trend &amp; Stability</div>
+          <h2>Retention Analytics</h2>
+          <p>Monthly renewal trajectories with optional moving average. The selected stage (<b id="stageName">1st Renewal</b>) drives the primary trend; the stacked view shows all stages together.</p></div>
+          <div class="legend" id="retLegend"></div>
+        </div>
+        <div class="card pad"><div class="chart-head"><div><div class="chart-title" id="trendTitle">Monthly 1st-Renewal Trend</div><div class="chart-sub" id="trendSub">Points = observed cohort values · line = trend</div></div><span class="chip fact">FACT</span></div><div id="mainTrend"></div></div>
+        <div class="two-col" style="margin-top:14px">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">All Renewal Stages Over Time</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">Stacked area — total observed retained share by purchase month.</div><div id="stackArea"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Churn Trend (after 1st cycle)</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">Churn = 100% − 1st-renewal rate, per cohort.</div><div id="churnTrend"></div></div>
+        </div>
+        <div class="two-col" style="margin-top:14px">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Stage-to-Stage Relationship</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">Each dot = a cohort. Do strong 1st renewals predict strong 2nd renewals?</div><div id="scatter"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Retention Velocity</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">Month-over-month change in 1st-renewal rate. Bars below zero = deceleration.</div><div id="velocity"></div></div>
+        </div>
+      </section>
+
+      <!-- ==================== FUNNEL ==================== -->
+      <section class="view" id="funnel">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> Conversion</div>
+          <h2>Renewal &amp; Retention Funnel</h2>
+          <p>Two funnels: the naive pooled funnel (all cohorts) and the <b>maturity-matched funnel</b> using only fully-aged 2024 cohorts — the honest view of how customers flow stage to stage.</p></div>
+        </div>
+        <div class="two-col">
+          <div class="card pad"><div class="chart-head"><div><div class="chart-title">Maturity-Matched Funnel</div><div class="chart-sub">Jun–Nov 2024 cohorts (≥18 months aged)</div></div><span class="chip fact">FACT</span></div><div id="funnelMature"></div></div>
+          <div class="card pad"><div class="chart-head"><div><div class="chart-title">Stage-to-Stage Conversion</div><div class="chart-sub">Of those who reached a stage, % who renewed again</div></div><span class="chip fact">FACT</span></div><div id="funnelConv"></div>
+            <div class="callout note" style="margin-top:12px"><span class="i">i</span><div><b>The loyalty curve inverts.</b> Conversion <i>rises</i> at every deeper stage — the battle is won or lost at the <b>first</b> renewal. Customers who renew twice are highly likely to keep renewing.</div></div>
+          </div>
+        </div>
+        <div class="card pad" style="margin-top:14px"><div class="chart-head"><div class="chart-title">Drop-off Waterfall (maturity-matched)</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:8px">Where the 100 customers who purchase are lost across the funnel.</div><div id="waterfall"></div></div>
+      </section>
+
+      <!-- ==================== PERIODS ==================== -->
+      <section class="view" id="periods">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> Period Comparison</div>
+          <h2>Quarter &amp; Year Analysis</h2>
+          <p>First-renewal performance aggregated by quarter and year. Aggregates use the mean of each period’s cohort values.</p></div>
+        </div>
+        <div class="two-col">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Yearly 1st-Renewal (avg)</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">2026 is a partial year (5 observed cohorts).</div><div id="yearBars"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Quarterly Heatmap</div><span class="chip fact">FACT</span></div><div class="chart-sub" style="margin-bottom:6px">Avg 1st-renewal by quarter. Blank = no cohorts in period.</div><div id="qHeat"></div></div>
+        </div>
+        <div class="statrow" id="periodStats" style="margin-top:14px"></div>
+      </section>
+
+      <!-- ==================== FORECAST ==================== -->
+      <section class="view" id="forecast">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip ai">AI · FORECAST</span> Predictive</div>
+          <h2>Forecast — 6 &amp; 12 Month Outlook</h2>
+          <p>A <b>level forecast (simple exponential smoothing)</b> — chosen because the first-renewal rate stabilized after a one-time 2024→2025 step-down, so linear trend extrapolation would predict implausible negatives. The historical slope is reported separately as descriptive fact. Shaded band = 80% prediction interval. <b>These are predictions, not facts.</b></p></div>
+          <span class="chip ai">Method: SES level forecast</span>
+        </div>
+        <div class="card pad"><div class="chart-head"><div><div class="chart-title">1st-Renewal Rate — Observed &amp; Forecast</div><div class="chart-sub">Solid = observed (fact) · dashed = forecast (AI) · band = 80% interval</div></div><span class="chip ai">FORECAST</span></div><div id="forecastChart"></div></div>
+        <div class="three-col" style="margin-top:14px" id="forecastCards"></div>
+        <div class="two-col" style="margin-top:14px">
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Method, Assumptions &amp; Confidence</div><span class="chip ai">AI</span></div><div id="methodBox"></div></div>
+          <div class="card pad"><div class="chart-head"><div class="chart-title">Limitations — read before quoting a number</div><span class="chip ai">AI</span></div>
+            <ul style="margin:10px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink-2);line-height:1.7">
+              <li><b>Short series &amp; structural break.</b> ~24 monthly points with a clear regime shift; a straight line understates uncertainty.</li>
+              <li><b>Right-censoring.</b> Recent cohorts are immature — fitting a trend through them biases the slope downward. The true forward rate is likely <i>above</i> the naive line.</li>
+              <li><b>No exogenous inputs.</b> Pricing, seasonality drivers, campaigns, and cohort size are not in the dataset.</li>
+              <li><b>Percentages only.</b> No customer counts, so intervals are on rates, not revenue or headcount.</li>
+              <li>We do <b>not</b> claim any prediction is “100% accurate”.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== RISK ==================== -->
+      <section class="view" id="risk">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip crit">RED-FLAG ENGINE</span> Auto-detected</div>
+          <h2>Risk Analysis</h2>
+          <p>Rules run over the uploaded data and flag conditions automatically. Each flag carries severity, business impact, affected cohorts, likely cause &amp; a recommended action.</p></div>
+          <div class="pill-row" id="riskCounts"></div>
+        </div>
+        <div class="grid" id="flagList" style="gap:12px"></div>
+      </section>
+
+      <!-- ==================== AI INSIGHTS ==================== -->
+      <section class="view" id="ai">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip ai">AI STRATEGIC INSIGHTS</span> Interpretation</div>
+          <h2>AI Insights</h2>
+          <p>Everything in this section is <b>interpretation</b>, clearly separated from the observed facts it rests on. Each card cites its evidence.</p></div>
+        </div>
+        <div class="grid three-col" id="insightGrid"></div>
+
+        <div class="sec-head"><div><div class="eyebrow"><span class="chip ai">AI</span> Root-Cause &amp; Behaviour</div><h2 style="font-size:18px">Root-cause analysis &amp; customer behaviour</h2></div></div>
+        <div class="two-col" id="rootCause"></div>
+
+        <div class="sec-head"><div><div class="eyebrow"><span class="chip ai">AI · PLAN</span> Time-boxed</div><h2 style="font-size:18px">30 / 60 / 90-day &amp; strategic horizon</h2></div></div>
+        <div class="grid" id="planGrid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px"></div>
+      </section>
+
+      <!-- ==================== RECOMMENDATIONS ==================== -->
+      <section class="view" id="recs">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip ai">MANAGEMENT ACTIONS</span> Categorized</div>
+          <h2>Recommendations</h2>
+          <p>Prioritized, categorized actions. Each carries the problem, its impact, priority, the recommendation, the expected outcome, and the KPI that proves success. Click to expand.</p></div>
+          <div class="filters"><div class="fl"><label for="recCat">Category</label><select id="recCat" onchange="renderRecs()"></select></div></div>
+        </div>
+        <div class="grid" id="recList" style="gap:10px"></div>
+      </section>
+
+      <!-- ==================== DATA TABLE ==================== -->
+      <section class="view" id="data">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip fact">FACT</span> Source of Truth</div>
+          <h2>Executive Data Table</h2>
+          <p>The uploaded cohort image, transcribed exactly. Blanks are shown as “—” and are excluded from all math. This table honors the Year filter.</p></div>
+          <div class="pill-row"><button class="btn sm" onclick="exportCSV()">↧ CSV</button><button class="btn sm" onclick="exportXLS()">↧ Excel</button></div>
+        </div>
+        <div class="tbl-wrap"><table id="dataTable"><thead><tr>
+          <th>Purchase Month</th><th>New Purchase</th><th>1st Renewal</th><th>2nd Renewal</th><th>3rd Renewal</th><th>4th Renewal</th><th>Churn (post-1st)</th><th>Depth</th><th>Rank</th>
+        </tr></thead><tbody id="dataBody"></tbody></table></div>
+        <div class="footnote">Depth = number of renewal stages with an observed value. Rank = position by 1st-renewal rate across all observed cohorts (1 = best). Churn (post-1st) = 100% − 1st renewal.</div>
+      </section>
+
+      <!-- ==================== EXPORTS ==================== -->
+      <section class="view" id="exports">
+        <div class="sec-head">
+          <div><div class="eyebrow"><span class="chip ghost">DELIVERY</span> Board-ready</div>
+          <h2>Exports &amp; Methodology</h2>
+          <p>Distribute the dashboard or the underlying facts.</p></div>
+        </div>
+        <div class="two-col">
+          <div class="card pad">
+            <div class="chart-title" style="margin-bottom:10px">Export</div>
+            <div class="pill-row">
+              <button class="btn p" onclick="window.print()">🖨 Print / Save as PDF</button>
+              <button class="btn" onclick="exportCSV()">↧ Data (CSV)</button>
+              <button class="btn" onclick="exportXLS()">↧ Data (Excel)</button>
+              <button class="btn" onclick="exportPNG('cohortTriangle','leanr-cohort-triangle')">↧ Cohort PNG</button>
+              <button class="btn" onclick="exportPNG('forecastChart','leanr-forecast')">↧ Forecast PNG</button>
+            </div>
+            <div class="footnote">PDF uses your browser’s print-to-PDF (full dashboard, print-optimized layout). PNG serializes the selected chart. CSV/Excel export the transcribed source table. No external services are contacted — everything runs in your browser.</div>
+          </div>
+          <div class="card pad">
+            <div class="chart-title" style="margin-bottom:10px">Data governance</div>
+            <div class="statrow" style="grid-template-columns:1fr 1fr">
+              <div class="stat"><div class="sl">Source</div><div class="sv" style="font-size:15px">Uploaded image</div><div class="sm">Single source of truth</div></div>
+              <div class="stat"><div class="sl">Fabrication</div><div class="sv" style="font-size:15px">None</div><div class="sm">Blanks never zero-filled</div></div>
+              <div class="stat"><div class="sl">Revenue</div><div class="sv na" style="font-size:15px">Not supplied</div><div class="sm">Auto-computes if ASP given</div></div>
+              <div class="stat"><div class="sl">Predictions</div><div class="sv" style="font-size:15px">Labelled</div><div class="sm">Never shown as fact</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card pad" style="margin-top:14px">
+          <div class="chart-title" style="margin-bottom:6px">Revenue module — dormant</div>
+          <div class="callout note"><span class="i">i</span><div><span class="na">Revenue data not supplied.</span> Provide an Average Selling Price (ASP) and cohort sizes and this module will automatically compute Revenue, MRR, ARR, Revenue Lost, Revenue at Risk, Revenue Opportunity, Upsell &amp; Cross-sell potential. Until then these KPIs read <span class="na">“Not available from uploaded dataset.”</span> rather than showing fabricated numbers.</div></div>
+          <div class="kpi-grid" style="margin-top:12px" id="revStub"></div>
+        </div>
+      </section>
+
+      <div style="height:40px"></div>
+      <div class="footnote" style="text-align:center;padding-bottom:20px">LeanR Executive Retention Intelligence · Facts computed live from the uploaded cohort image · AI insights &amp; forecasts are clearly labelled and never presented as historical fact · Built for leadership decision-making.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   DATA — transcribed EXACTLY from the uploaded cohort image.
+   null = blank cell (future/unreached stage). Never treated as 0.
+   ============================================================ */
+const MONTHS_ORDER = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const RAW = [
+  {y:2024,m:"Jun",r1:38,r2:25,r3:25,r4:null},
+  {y:2024,m:"Jul",r1:25,r2:13,r3:7, r4:null},
+  {y:2024,m:"Aug",r1:25,r2:8, r3:6, r4:2},
+  {y:2024,m:"Sep",r1:25,r2:13,r3:7, r4:3},
+  {y:2024,m:"Oct",r1:24,r2:10,r3:5, r4:null},
+  {y:2024,m:"Nov",r1:38,r2:29,r3:29,r4:null},
+  {y:2024,m:"Dec",r1:25,r2:4, r3:null,r4:null},
+  {y:2025,m:"Jan",r1:22,r2:3, r3:3, r4:null},
+  {y:2025,m:"Feb",r1:8, r2:4, r3:null,r4:null},
+  {y:2025,m:"Mar",r1:30,r2:null,r3:null,r4:null},
+  {y:2025,m:"Apr",r1:20,r2:4, r3:null,r4:null},
+  {y:2025,m:"May",r1:15,r2:1, r3:null,r4:null},
+  {y:2025,m:"Jun",r1:18,r2:6, r3:null,r4:null},
+  {y:2025,m:"Jul",r1:11,r2:1, r3:null,r4:null},
+  {y:2025,m:"Aug",r1:8, r2:3, r3:null,r4:null},
+  {y:2025,m:"Sep",r1:8, r2:1, r3:null,r4:null},
+  {y:2025,m:"Oct",r1:13,r2:1, r3:null,r4:null},
+  {y:2025,m:"Nov",r1:12,r2:2, r3:null,r4:null},
+  {y:2025,m:"Dec",r1:8, r2:1, r3:null,r4:null},
+  {y:2026,m:"Jan",r1:11,r2:0, r3:null,r4:null},
+  {y:2026,m:"Feb",r1:6, r2:1, r3:null,r4:null},
+  {y:2026,m:"Mar",r1:9, r2:1, r3:null,r4:null},
+  {y:2026,m:"Apr",r1:7, r2:1, r3:null,r4:null},
+  {y:2026,m:"May",r1:1, r2:null,r3:null,r4:null},
+  {y:2026,m:"Jun",r1:null,r2:null,r3:null,r4:null}
+];
+RAW.forEach((d,i)=>{ d.i=i; d.np=100; d.label=d.m+" "+String(d.y).slice(2); d.full=d.m+" "+d.y;
+  const mi=MONTHS_ORDER.indexOf(d.m); d.q=Math.floor(mi/3)+1; d.mi=mi;
+  d.depth=["r1","r2","r3","r4"].filter(k=>d[k]!=null).length;
+  d.churn=(d.r1!=null)? +(100-d.r1).toFixed(1) : null;
+});
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const vals=(arr,k)=>arr.map(d=>d[k]).filter(v=>v!=null);
+const mean=a=>a.length? a.reduce((s,v)=>s+v,0)/a.length : null;
+const std=a=>{ if(a.length<2) return 0; const m=mean(a); return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/a.length); };
+const round=(v,n=1)=>v==null?null:+v.toFixed(n);
+const pct=(v,n=1)=>v==null?'<span class="na">n/a</span>':v.toFixed(n).replace(/\.0$/,'')+'%';
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,txt){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+function svg(w,h){const s=document.createElementNS(NS,"svg");s.setAttribute("viewBox",`0 0 ${w} ${h}`);s.setAttribute("preserveAspectRatio","xMidYMid meet");s.setAttribute("role","img");return s;}
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+
+/* ---------- tooltip ---------- */
+const tip=$("#tip");
+function bindTip(node,html){
+  node.style.cursor="default";
+  node.addEventListener("mouseenter",()=>{tip.innerHTML=html;tip.classList.add("on");});
+  node.addEventListener("mousemove",e=>{let x=e.clientX+14,y=e.clientY+16;if(x+tip.offsetWidth>innerWidth-8)x=e.clientX-tip.offsetWidth-14;if(y+tip.offsetHeight>innerHeight-8)y=e.clientY-tip.offsetHeight-16;tip.style.left=x+"px";tip.style.top=y+"px";});
+  node.addEventListener("mouseleave",()=>tip.classList.remove("on"));
+}
+
+/* ============================================================
+   FILTER STATE
+   ============================================================ */
+const state={year:"all",quarter:"all",stage:"r1",roll:0};
+function filtered(){
+  return RAW.filter(d=>(state.year==="all"||d.y==+state.year)&&(state.quarter==="all"||d.q==+state.quarter));
+}
+const STAGE_NAME={r1:"1st Renewal",r2:"2nd Renewal",r3:"3rd Renewal",r4:"4th Renewal"};
+
+/* ============================================================
+   CORE METRIC ENGINE  (all reproducible)
+   ============================================================ */
+function metrics(scope){
+  const set=scope||RAW;
+  const withR1=set.filter(d=>d.r1!=null);
+  const M={
+    nCohorts:set.length,
+    nObserved:withR1.length,
+    avgR1:mean(vals(set,"r1")), avgR2:mean(vals(set,"r2")), avgR3:mean(vals(set,"r3")), avgR4:mean(vals(set,"r4")),
+    stdR1:std(vals(set,"r1")),
+    best:null,worst:null,strongest:null
+  };
+  M.avgChurn = M.avgR1!=null? 100-M.avgR1 : null;
+  // best / worst by r1
+  if(withR1.length){
+    M.best=withR1.reduce((a,b)=>b.r1>a.r1?b:a);
+    M.worst=withR1.reduce((a,b)=>b.r1<a.r1?b:a);
+    // strongest overall cohort: weighted depth score
+    M.strongest=set.filter(d=>d.r1!=null).reduce((a,b)=>score(b)>score(a)?b:a);
+  }
+  return M;
+}
+function score(d){ // cohort strength composite for ranking (fact-based)
+  return (d.r1||0)*1 + (d.r2||0)*1.3 + (d.r3||0)*1.6 + (d.r4||0)*2;
+}
+// global rank by r1 (across ALL observed cohorts)
+const RANKED=[...RAW].filter(d=>d.r1!=null).sort((a,b)=>b.r1-a.r1);
+RANKED.forEach((d,i)=>d.rank=i+1);
+
+/* linear regression y=a+bx over index */
+function linreg(pts){ // pts:[{x,y}]
+  const n=pts.length, sx=pts.reduce((s,p)=>s+p.x,0), sy=pts.reduce((s,p)=>s+p.y,0);
+  const mx=sx/n,my=sy/n;
+  let sxx=0,sxy=0; pts.forEach(p=>{sxx+=(p.x-mx)**2;sxy+=(p.x-mx)*(p.y-my);});
+  const b=sxy/sxx, a=my-b*mx;
+  let sse=0; pts.forEach(p=>{const e=p.y-(a+b*p.x);sse+=e*e;});
+  const se=Math.sqrt(sse/Math.max(1,n-2));
+  return {a,b,se,mx,sxx,n};
+}
+function sesForecast(series,alpha){ let lvl=series[0]; for(let i=1;i<series.length;i++) lvl=alpha*series[i]+(1-alpha)*lvl; return lvl; }
+
+/* ============================================================
+   SVG CHART PRIMITIVES
+   ============================================================ */
+function lineChart(host,series,opts){
+  opts=opts||{}; host.innerHTML="";
+  const W=opts.w||760,H=opts.h||280,pad={l:38,r:opts.padR||24,t:14,b:26};
+  const s=svg(W,H); const all=series.flatMap(se=>se.pts.map(p=>p.y)).concat(opts.extra||[]);
+  const ymax=opts.ymax!=null?opts.ymax:Math.max(5,Math.ceil(Math.max(...all)/5)*5), ymin=opts.ymin||0;
+  const xs=opts.xLabels, n=xs.length;
+  const X=i=>pad.l+(n<=1?0:i/(n-1))*(W-pad.l-pad.r);
+  const Y=v=>H-pad.b-(v-ymin)/(ymax-ymin)*(H-pad.t-pad.b);
+  // gridlines
+  const ticks=opts.yticks||5;
+  for(let i=0;i<=ticks;i++){const v=ymin+(ymax-ymin)*i/ticks,y=Y(v);
+    s.appendChild(el("line",{x1:pad.l,y1:y,x2:W-pad.r,y2:y,class:"gridline"}));
+    s.appendChild(el("text",{x:pad.l-6,y:y+3,"text-anchor":"end",class:"axis-txt tnum"},Math.round(v)+"%"));}
+  // x labels — force the last only when it won't collide with the prior tick
+  const step=Math.ceil(n/ (opts.maxX||12));
+  const lastMult=Math.floor((n-1)/step)*step;
+  const showLast=(n-1)!==lastMult && ((n-1)-lastMult)>=Math.max(2,step);
+  xs.forEach((lb,i)=>{ if(i%step===0||(i===n-1&&showLast)){ s.appendChild(el("text",{x:X(i),y:H-8,"text-anchor":"middle",class:"axis-txt"},lb)); }});
+  // band (forecast interval)
+  if(opts.band){
+    let dpath="";
+    opts.band.up.forEach((p,i)=>{dpath+=(i===0?"M":"L")+X(p.x)+" "+Y(p.y)+" ";});
+    for(let i=opts.band.lo.length-1;i>=0;i--){const p=opts.band.lo[i];dpath+="L"+X(p.x)+" "+Y(p.y)+" ";}
+    dpath+="Z"; s.appendChild(el("path",{d:dpath,fill:opts.bandColor||"var(--s4)","fill-opacity":.13,stroke:"none"}));
+  }
+  // series
+  series.forEach(se=>{
+    let d="";se.pts.forEach((p,i)=>{d+=(i===0?"M":"L")+X(p.x)+" "+Y(p.y)+" ";});
+    if(se.area){ let a=d+"L"+X(se.pts[se.pts.length-1].x)+" "+Y(ymin)+" L"+X(se.pts[0].x)+" "+Y(ymin)+" Z";
+      s.appendChild(el("path",{d:a,fill:se.color,"fill-opacity":.10,stroke:"none"})); }
+    s.appendChild(el("path",{d,fill:"none",stroke:se.color,"stroke-width":se.width||2,"stroke-linejoin":"round","stroke-linecap":"round","stroke-dasharray":se.dash||"none"}));
+    if(se.dots!==false) se.pts.forEach(p=>{
+      const c=el("circle",{cx:X(p.x),cy:Y(p.y),r:se.r||3.4,fill:se.color,stroke:"var(--surface)","stroke-width":2});
+      if(p.tip)bindTip(c,p.tip); s.appendChild(c);
+    });
+    if(se.endLabel){const lp=se.pts[se.pts.length-1];s.appendChild(el("text",{x:X(lp.x)+8,y:Y(lp.y)+3,class:"axis-txt tnum",fill:"var(--ink-2)","font-weight":700,"font-size":11},se.endLabel));}
+  });
+  host.appendChild(s);
+}
+
+function barChart(host,data,opts){ // data:[{label,value,color,tip,neg}]
+  opts=opts||{};host.innerHTML="";
+  const horiz=opts.horiz; const W=opts.w||760,H=opts.h||(horiz?data.length*30+30:260);
+  const s=svg(W,H);
+  const vmax=opts.vmax!=null?opts.vmax:Math.max(...data.map(d=>Math.abs(d.value)),1);
+  if(horiz){
+    const pl=opts.labelW||96,pr=44,bh=Math.min(20,(H-20)/data.length-6);
+    data.forEach((d,i)=>{
+      const y=14+i*((H-20)/data.length), w=(Math.abs(d.value)/vmax)*(W-pl-pr);
+      s.appendChild(el("text",{x:pl-8,y:y+bh/2+3,"text-anchor":"end",class:"axis-txt",fill:"var(--ink-2)","font-size":11},d.label));
+      const r=el("rect",{x:pl,y:y,width:Math.max(2,w),height:bh,rx:4,fill:d.color||"var(--accent)"});
+      if(d.tip)bindTip(r,d.tip);s.appendChild(r);
+      s.appendChild(el("text",{x:pl+w+7,y:y+bh/2+3,class:"axis-txt tnum",fill:"var(--ink-2)","font-weight":700,"font-size":11},d.vlabel!=null?d.vlabel:d.value+"%"));
+    });
+  }else{
+    const pb=30,pl=34,pt=14,bw=Math.min(24,(W-pl-10)/data.length-8),zero=opts.zero||0;
+    const Y=v=>{const range=vmax-(opts.min||0);return H-pb-((v-(opts.min||0))/range)*(H-pt-pb);};
+    // zero line if negatives
+    if(opts.min<0){const zy=Y(0);s.appendChild(el("line",{x1:pl,y1:zy,x2:W-6,y2:zy,class:"gridline"}));}
+    data.forEach((d,i)=>{
+      const x=pl+i*((W-pl-6)/data.length)+((W-pl-6)/data.length-bw)/2;
+      const base=opts.min<0?Y(0):H-pb; const y=Y(d.value); const h=Math.abs(base-y);
+      const r=el("rect",{x:x,y:Math.min(base,y),width:bw,height:Math.max(2,h),rx:4,fill:d.color||"var(--accent)"});
+      if(d.tip)bindTip(r,d.tip);s.appendChild(r);
+      if(d.label)s.appendChild(el("text",{x:x+bw/2,y:H-8,"text-anchor":"middle",class:"axis-txt","font-size":9.5},d.label));
+      if(opts.valTop!==false)s.appendChild(el("text",{x:x+bw/2,y:Math.min(base,y)-4,"text-anchor":"middle",class:"axis-txt tnum","font-size":9.5,fill:"var(--ink-2)","font-weight":700},d.vlabel!=null?d.vlabel:d.value));
+    });
+  }
+  host.appendChild(s);
+}
+
+function gauge(host,value,opts){ // value 0-100
+  opts=opts||{};host.innerHTML="";
+  const W=260,H=150,cx=W/2,cy=125,r=96;
+  const s=svg(W,H);
+  const a0=Math.PI,a1=0;
+  function pt(ang){return[cx+r*Math.cos(ang),cy+r*Math.sin(ang)];}
+  // track segments (severity)
+  const segs=[[0,25,"var(--crit)"],[25,50,"var(--serious)"],[50,75,"var(--warn)"],[75,100,"var(--good)"]];
+  segs.forEach(([f,t,c])=>{
+    const af=a0+(f/100)*(a1-a0), at=a0+(t/100)*(a1-a0);
+    const [x1,y1]=pt(af),[x2,y2]=pt(at);
+    s.appendChild(el("path",{d:`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`,fill:"none",stroke:c,"stroke-width":13,"stroke-linecap":"butt","opacity":.30}));
+  });
+  // value arc
+  const av=a0+(clamp(value,0,100)/100)*(a1-a0);
+  const [vx,vy]=pt(av);const[sx,sy]=pt(a0);
+  const large=0;
+  const col=value>=75?"var(--good)":value>=50?"var(--warn)":value>=25?"var(--serious)":"var(--crit)";
+  s.appendChild(el("path",{d:`M ${sx} ${sy} A ${r} ${r} 0 0 1 ${vx} ${vy}`,fill:"none",stroke:col,"stroke-width":13,"stroke-linecap":"round"}));
+  // needle dot
+  s.appendChild(el("circle",{cx:vx,cy:vy,r:6,fill:col,stroke:"var(--surface)","stroke-width":2.5}));
+  // value text
+  s.appendChild(el("text",{x:cx,y:cy-22,"text-anchor":"middle","font-size":38,"font-weight":740,fill:"var(--ink)","font-family":"var(--sans)"},Math.round(value)));
+  s.appendChild(el("text",{x:cx,y:cy-4,"text-anchor":"middle","font-size":11,fill:"var(--muted)","font-family":"var(--sans)"},opts.unit||"/ 100"));
+  host.appendChild(s);
+  if(opts.caption){const cap=document.createElement("div");cap.className="ksub";cap.style.justifyContent="center";cap.style.marginTop="4px";cap.innerHTML=opts.caption;host.appendChild(cap);}
+}
+
+/* ============================================================
+   RENDER: KPI CARDS
+   ============================================================ */
+function kpiCard(label,value,sub,stripe,tipHtml,delta){
+  const d=document.createElement("div");d.className="kpi";
+  d.innerHTML=`<div class="stripe" style="background:${stripe}"></div>
+    <div class="kl">${label}<span class="info" tabindex="0">i</span></div>
+    <div class="kv tnum">${value}</div>
+    <div class="ksub">${delta||""}${sub?`<span>${sub}</span>`:""}</div>`;
+  bindTip(d.querySelector(".info"),tipHtml);
+  return d;
+}
+function deltaTag(cur,prev,goodUp=true){
+  if(cur==null||prev==null)return"";
+  const diff=cur-prev;const dir=diff>0?"up":diff<0?"down":"flat";
+  const good=(diff>0)===goodUp;
+  const cls=diff===0?"flat":good?"up":"down";
+  const arrow=diff>0?"▲":diff<0?"▼":"■";
+  return `<span class="delta ${cls}">${arrow} ${Math.abs(diff).toFixed(1)}pt</span>`;
+}
+function renderKPIs(){
+  const scope=filtered(); const M=metrics(scope); const grid=$("#kpiGrid");grid.innerHTML="";
+  $("#kpiScope").textContent="Scope: "+scopeLabel();
+  // year comparators for deltas
+  const y24=metrics(RAW.filter(d=>d.y===2024)),y25=metrics(RAW.filter(d=>d.y===2025)),y26=metrics(RAW.filter(d=>d.y===2026));
+  const cards=[
+    ["Total Cohorts",M.nCohorts+"",`${M.nObserved} with observed renewal`,"var(--accent)",
+      "<b>Total Cohorts</b><br>Formula: COUNT of purchase-month rows in scope.<br>Meaning: monthly acquisition batches tracked.<br>Source: uploaded image (rows).",""],
+    ["Avg 1st Renewal",pct(M.avgR1),"of new purchasers renew once","var(--accent)",
+      "<b>Overall 1st Renewal %</b><br>Formula: mean(r1) over cohorts with an observed 1st renewal.<br>Meaning: the single most important retention gate.<br>Source: uploaded image · '1st Renewal' column.",
+      state.year==="all"?deltaTag(y26.avgR1,y25.avgR1):""],
+    ["Avg 2nd Renewal",pct(M.avgR2),"reach a second renewal","var(--s2)",
+      "<b>Overall 2nd Renewal %</b><br>Formula: mean(r2) over cohorts with observed 2nd renewal.<br>Meaning: mid-funnel loyalty.<br>Source: uploaded image · '2nd Renewal'.",""],
+    ["Avg 3rd Renewal",pct(M.avgR3),"reach a third renewal","var(--s3)",
+      "<b>Overall 3rd Renewal %</b><br>Formula: mean(r3) over cohorts with observed 3rd renewal (mostly mature 2024 cohorts).<br>Meaning: deep loyalty. Maturity-biased — see Funnel.<br>Source: uploaded image · '3rd Renewal'.",""],
+    ["Avg 4th Renewal",pct(M.avgR4),"reach a fourth renewal","var(--s4)",
+      "<b>Overall 4th Renewal %</b><br>Formula: mean(r4) over cohorts with observed 4th renewal (Aug &amp; Sep 2024 only).<br>Meaning: elite loyalists.<br>Source: uploaded image · '4th Renewal'.",""],
+    ["Avg Churn (post-1st)",pct(M.avgChurn),"lost after first cycle","var(--crit)",
+      "<b>Average Churn</b><br>Formula: 100% − Avg 1st Renewal.<br>Meaning: share of buyers who never return after purchase.<br>Source: derived from '1st Renewal'.",""],
+    ["Best Month",M.best?M.best.full:"—",M.best?`${M.best.r1}% 1st renewal`:"","var(--good)",
+      "<b>Best Month</b><br>Formula: argmax(r1) in scope.<br>Meaning: strongest acquisition-to-renewal month.<br>Source: uploaded image.",""],
+    ["Worst Month",M.worst?M.worst.full:"—",M.worst?`${M.worst.r1}% 1st renewal`:"","var(--crit)",
+      "<b>Worst Month</b><br>Formula: argmin(r1) in scope.<br>Meaning: weakest month (recent months may be immature).<br>Source: uploaded image.",""],
+    ["Strongest Cohort",M.strongest?M.strongest.full:"—",M.strongest?`depth ${M.strongest.depth}/4`:"","var(--good)",
+      "<b>Strongest Cohort</b><br>Formula: argmax of depth-weighted score = r1 + 1.3·r2 + 1.6·r3 + 2·r4.<br>Meaning: best full-lifecycle loyalty.<br>Source: uploaded image (all stages).",""],
+    ["Retention Stability",M.stdR1!=null?"±"+M.stdR1.toFixed(1)+"pt":"—","std dev of 1st renewal","var(--warn)",
+      "<b>Retention Stability</b><br>Formula: population standard deviation of r1 in scope.<br>Meaning: lower = more predictable retention.<br>Source: derived from '1st Renewal'.",""],
+    ["Largest Drop-off",(M.avgR1!=null?(100-M.avgR1).toFixed(0)+"pt":"—"),"Purchase → 1st Renewal","var(--crit)",
+      "<b>Largest Drop-off</b><br>Formula: max stage-to-stage loss = 100 − Avg 1st Renewal.<br>Meaning: the funnel leak is at the very first step.<br>Source: derived.",""],
+    ["Executive Health",healthScore().total.toFixed(0),"/ 100 · model index","var(--warn)",
+      "<b>Executive Health Score</b> (MODEL, not a fact)<br>Formula: weighted blend — Level 35% + Trend 30% + Depth 20% + Stability 15%, each normalized 0–100.<br>Meaning: one-glance composite of retention health.<br>Source: derived model over uploaded facts.",""]
+  ];
+  cards.forEach(c=>grid.appendChild(kpiCard(c[0],c[1],c[2],c[3],c[4],c[5])));
+}
+function scopeLabel(){let p=[];if(state.year!=="all")p.push(state.year);if(state.quarter!=="all")p.push("Q"+state.quarter);return p.length?p.join(" · "):"all cohorts";}
+
+/* ============================================================
+   MODEL SCORES
+   ============================================================ */
+function healthScore(){
+  const all=metrics(RAW);
+  const recent=RAW.filter(d=>d.r1!=null).slice(-3); // last 3 observed
+  const recentAvg=mean(recent.map(d=>d.r1));
+  // Level: recent 1st renewal vs 30% target
+  const level=clamp(recentAvg/30*100,0,100);
+  // Trend: slope over observed r1 (negative = bad). map slope [-2..+1] -> [0..100]
+  const pts=RAW.filter(d=>d.r1!=null).map(d=>({x:d.i,y:d.r1}));
+  const lr=linreg(pts); const trend=clamp((lr.b+2)/3*100,0,100);
+  // Depth: how many cohorts reach r2+ / share
+  const reachR2=RAW.filter(d=>d.r2!=null&&d.r2>0).length; const depthScore=clamp(mean(RAW.filter(d=>d.r2!=null).map(d=>d.r2))/15*100,0,100);
+  // Stability: inverse of volatility
+  const stab=clamp(100-all.stdR1*7,0,100);
+  const total=level*.35+trend*.30+depthScore*.20+stab*.15;
+  return {total,level,trend,depth:depthScore,stab,slope:lr.b,recentAvg,lr};
+}
+function renderGauges(){
+  const h=healthScore();
+  const band=v=>v>=75?["Strong","var(--good-ink)"]:v>=50?["Watch","var(--warn-ink)"]:v>=25?["Weak","var(--serious-ink)"]:["Critical","var(--crit-ink)"];
+  const hb=band(h.total);
+  gauge($("#healthGauge"),h.total,{caption:`<span style="color:${hb[1]};font-weight:700">${hb[0]}</span> · Level ${h.level.toFixed(0)} · Trend ${h.trend.toFixed(0)} · Depth ${h.depth.toFixed(0)} · Stability ${h.stab.toFixed(0)}`});
+  const ret=clamp(mean(vals(RAW,"r1"))/30*100,0,100);
+  gauge($("#gaugeRet"),ret,{caption:`Avg 1st renewal ${pct(mean(vals(RAW,"r1")))} vs 30% benchmark`});
+  gauge($("#gaugeDepth"),h.depth,{caption:`Avg 2nd renewal ${pct(mean(vals(RAW,"r2")))} · depth of loyalty`});
+  const risk=clamp(100-h.total*0.55-ret*0.25,0,100);
+  // risk gauge: invert coloring meaning (high = bad) -> we display value but note
+  riskGauge($("#gaugeRisk"),risk);
+}
+function riskGauge(host,value){ // high value = high risk (red at top)
+  host.innerHTML="";const W=260,H=150,cx=W/2,cy=125,r=96;const s=svg(W,H);const a0=Math.PI,a1=0;
+  const pt=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  const segs=[[0,25,"var(--good)"],[25,50,"var(--warn)"],[50,75,"var(--serious)"],[75,100,"var(--crit)"]];
+  segs.forEach(([f,t,c])=>{const af=a0+(f/100)*(a1-a0),at=a0+(t/100)*(a1-a0);const[x1,y1]=pt(af),[x2,y2]=pt(at);
+    s.appendChild(el("path",{d:`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`,fill:"none",stroke:c,"stroke-width":13,"opacity":.30}));});
+  const av=a0+(clamp(value,0,100)/100)*(a1-a0);const[vx,vy]=pt(av);const[sx,sy]=pt(a0);
+  const col=value>=75?"var(--crit)":value>=50?"var(--serious)":value>=25?"var(--warn)":"var(--good)";
+  s.appendChild(el("path",{d:`M ${sx} ${sy} A ${r} ${r} 0 0 1 ${vx} ${vy}`,fill:"none",stroke:col,"stroke-width":13,"stroke-linecap":"round"}));
+  s.appendChild(el("circle",{cx:vx,cy:vy,r:6,fill:col,stroke:"var(--surface)","stroke-width":2.5}));
+  s.appendChild(el("text",{x:cx,y:cy-22,"text-anchor":"middle","font-size":38,"font-weight":740,fill:"var(--ink)"},Math.round(value)));
+  s.appendChild(el("text",{x:cx,y:cy-4,"text-anchor":"middle","font-size":11,fill:"var(--muted)"},"/ 100 risk"));
+  host.appendChild(s);
+  const cap=document.createElement("div");cap.className="ksub";cap.style.cssText="justify-content:center;margin-top:4px";
+  const lab=value>=75?["Severe","var(--crit-ink)"]:value>=50?["Elevated","var(--serious-ink)"]:value>=25?["Moderate","var(--warn-ink)"]:["Low","var(--good-ink)"];
+  cap.innerHTML=`<span style="color:${lab[1]};font-weight:700">${lab[0]} risk</span> · higher = worse`;host.appendChild(cap);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+function renderHero(){
+  const M=metrics(RAW);
+  $("#heroR1").textContent=(M.avgR1).toFixed(0)+"%";
+  $("#heroChurn").textContent=(M.avgChurn).toFixed(0)+"%";
+  // spark of yearly r1
+  const yrs=[2024,2025,2026].map(y=>({y,v:mean(vals(RAW.filter(d=>d.y===y),"r1"))}));
+  barChart($("#heroSpark"),yrs.map(o=>({label:o.y,value:round(o.v),vlabel:o.v.toFixed(0)+"%",color:o.y===2024?"var(--good)":o.y===2025?"var(--warn)":"var(--crit)",
+    tip:`<b>${o.y}</b><br>Avg 1st renewal: ${o.v.toFixed(1)}%<br>${o.y===2026?"partial year (5 cohorts)":""}`})),{w:300,h:120,vmax:32});
+  // stats
+  const y24=mean(vals(RAW.filter(d=>d.y===2024),"r1")),y25=mean(vals(RAW.filter(d=>d.y===2025),"r1")),y26=mean(vals(RAW.filter(d=>d.y===2026),"r1"));
+  const yoy=((y25-y24)/y24*100);
+  $("#heroStats").innerHTML=`
+    <div class="stat"><div class="sl">2024 avg</div><div class="sv tnum">${y24.toFixed(0)}%</div><div class="sm">7 cohorts</div></div>
+    <div class="stat"><div class="sl">2025 avg</div><div class="sv tnum">${y25.toFixed(0)}%</div><div class="sm">12 cohorts</div></div>
+    <div class="stat"><div class="sl">YoY 25v24</div><div class="sv tnum" style="color:var(--crit-ink)">${yoy.toFixed(0)}%</div><div class="sm">decline</div></div>
+    <div class="stat"><div class="sl">2026 avg</div><div class="sv tnum">${y26.toFixed(0)}%</div><div class="sm">partial</div></div>`;
+}
+
+/* ============================================================
+   LEADERSHIP READ + INSIGHTS + PLANS
+   ============================================================ */
+function mkInsight(host,mark,markColor,title,body,evidence,chip){
+  const d=document.createElement("div");d.className="insight";
+  d.innerHTML=`<div class="mk" style="background:${markColor}20;color:${markColor}">${mark}</div>
+   <div><h4>${title} ${chip?`<span class="chip ${chip[0]}" style="margin-left:4px">${chip[1]}</span>`:""}</h4><p>${body}</p>${evidence?`<div class="ev"><b>Evidence:</b> ${evidence}</div>`:""}</div>`;
+  host.appendChild(d);
+}
+function renderLeadRead(){
+  const h=host=>$(host); const w=$("#leadRead");w.innerHTML="";
+  const M=metrics(RAW);const fm=matureFunnel();
+  mkInsight(w,"1","var(--crit)","83% never come back","The overall first-renewal rate is ~17%, so roughly five in six new customers do not make a second purchase. Retention — not acquisition — is the binding constraint on growth.",
+    `Avg 1st renewal ${M.avgR1.toFixed(1)}% across ${M.nObserved} cohorts (uploaded data).`,["ai","AI READ"]);
+  mkInsight(w,"2","var(--serious)","The trend is downward","First-renewal has fallen from a ~29% average in 2024 to ~14% in 2025 to single digits in early 2026. Part is real weakening; part is recent cohorts still maturing.",
+    `2024 → 2025 avg 1st renewal −49% (28.6%→14.4%).`,["ai","AI READ"]);
+  mkInsight(w,"3","var(--good)","Deep loyalty is sticky","Among mature 2024 cohorts, once a customer renews twice they usually keep renewing (2nd→3rd conversion ≈ ${fm.c23}%). The problem is getting them <i>into</i> the loyalty loop.".replace("${fm.c23}",fm.c23),
+    `Maturity-matched conversion rises: 1st→2nd ${fm.c12}%, 2nd→3rd ${fm.c23}%.`,["ai","AI READ"]);
+  mkInsight(w,"4","var(--accent)","Fix the first 30–45 days","Because the leak is concentrated at the first renewal, the highest-leverage intervention is the onboarding-to-first-renewal journey — not deep-funnel loyalty programs.",
+    `Largest single drop-off = Purchase→1st renewal (~${(100-M.avgR1).toFixed(0)} pts).`,["ai","AI READ"]);
+}
+function renderInsights(){
+  const g=$("#insightGrid");g.innerHTML="";const M=metrics(RAW);const fm=matureFunnel();
+  const items=[
+    ["◈","var(--accent)","Executive summary","Retention is structurally weak and declining. First renewal averages ~17% and trends down; deep-funnel loyalty is strong but too few customers reach it.",`Avg r1 ${M.avgR1.toFixed(1)}%, slope ${healthScore().slope.toFixed(2)}pt/mo.`,["ai","AI"]],
+    ["⚑","var(--crit)","Top business risk","A declining first-renewal rate compounds: fewer renewers today means a smaller loyal base tomorrow. Without intervention the loyal cohort shrinks structurally.","2026 avg r1 6.8% vs 2024 28.6%.",["ai","RISK"]],
+    ["◹","var(--good)","Growth opportunity","Closing even part of the gap to the strongest cohorts (Nov 2024 = 38/29/29) would multiply the loyal base. The ceiling is demonstrated by your own best months.","Best cohort retains 29% to 3rd renewal.",["ai","OPPORTUNITY"]],
+    ["◐","var(--serious)","Seasonality signal","Late-2024 (Q4) shows the strongest first renewals; mid-2025 onward is persistently weak. Suggestive of a seasonal and/or acquisition-quality shift — not conclusive on 2 years.","Q4-2024 avg r1 29% vs Q3-2025 9%.",["ai","PATTERN"]],
+    ["▽","var(--warn)","Weak cohorts","2025-H2 and 2026 cohorts cluster at single-digit first renewal. Even allowing for immaturity, mature-enough months (e.g., Feb 2025 8%) confirm genuine softening.","8 of last 12 observed cohorts ≤ 12% r1.",["ai","SEGMENT"]],
+    ["◎","var(--accent)","Strong cohorts","Jun &amp; Nov 2024 anchor the top. Their depth (retaining to 3rd/4th renewal) proves the product can create loyalty when the first renewal lands.","Top-2 by r1 both 38%.",["ai","SEGMENT"]]
+  ];
+  items.forEach(it=>mkInsight(g,it[0],it[1],it[2],it[3],it[4],it[5]));
+}
+function renderRootCause(){
+  const w=$("#rootCause");w.innerHTML="";
+  mkInsight(w,"?","var(--serious)","Root-cause hypotheses","Likely drivers of the first-renewal collapse: (a) onboarding/early-value gap so customers don't feel results before renewal; (b) acquisition-mix shift toward lower-intent buyers as volume scaled; (c) weak or absent renewal prompts at the decision moment; (d) pricing/packaging friction at renewal.","Interpretation of the observed 100→17% first-step drop and the 2024→2026 decline. Not directly measured — validate with ops data.",["ai","HYPOTHESIS"]);
+  mkInsight(w,"◱","var(--accent)","Customer & retention behaviour","Behaviour is bimodal: a small, highly loyal segment renews repeatedly (deep funnel is sticky), while the majority churns immediately. This is a classic 'leaky first step, loyal core' pattern — value the core and widen the entry to it.","Deep-funnel conversion rises stage-to-stage (fact); mass first-cycle churn (fact).",["ai","BEHAVIOUR"]);
+}
+function renderPlans(){
+  const g=$("#planGrid");g.innerHTML="";
+  const plans=[
+    ["30-DAY","var(--crit)","Stop the bleed",["Instrument the first-renewal journey; identify the exact drop-off point.","Launch a manual win-back on customers approaching renewal.","Ship a renewal reminder + incentive at the decision moment."]],
+    ["60-DAY","var(--serious)","Re-engineer onboarding",["Redesign first-value onboarding so results land before the renewal date.","A/B test renewal offer, price, and packaging.","Segment acquisition by early-intent signals."]],
+    ["90-DAY","var(--warn)","Systematize",["Automate the renewal playbook end-to-end.","Stand up a weekly retention cadence with named owners.","Publish a cohort-health scorecard (this dashboard) to leadership."]],
+    ["6-MONTH","var(--accent)","Compound the core",["Build a loyalty ladder that rewards the sticky deep-funnel segment.","Shift acquisition spend toward high-retention channels/cohorts.","Target first renewal back to the low-20s%."]],
+    ["12-MONTH","var(--good)","Structural fix",["Make first-renewal rate a company-level OKR.","Predictive churn scoring feeding proactive save-plays.","Re-underwrite unit economics on the improved retention curve."]]
+  ];
+  plans.forEach(p=>{
+    const d=document.createElement("div");d.className="card pad";
+    d.innerHTML=`<div class="eyebrow" style="color:${p[1]}"><span class="chip ai">PLAN</span>${p[0]}</div>
+      <h4 style="font-size:14px;margin:8px 0 8px">${p[2]}</h4>
+      <ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ink-2);line-height:1.65">${p[3].map(x=>`<li>${x}</li>`).join("")}</ul>`;
+    g.appendChild(d);
+  });
+}
+
+/* ============================================================
+   COHORT TRIANGLE (heatmap)
+   ============================================================ */
+function heatColor(v){ // 0..~40 blue ramp
+  if(v==null)return null;
+  const stops=[[0,"--heat-0"],[3,"--heat-1"],[8,"--heat-2"],[15,"--heat-3"],[24,"--heat-4"],[32,"--heat-5"],[40,"--heat-6"]];
+  for(let i=stops.length-1;i>=0;i--){if(v>=stops[i][0])return cssv(stops[i][1]);}
+  return cssv("--heat-0");
+}
+function renderCohortTriangle(){
+  const host=$("#cohortTriangle");host.innerHTML="";
+  const cols=["r1","r2","r3","r4"];const colNames=["1st","2nd","3rd","4th"];
+  const cw=118,ch=30,lw=110,head=30;
+  const W=lw+cw*4+cw*0.5, H=head+RAW.length*ch+4;
+  const s=svg(W,H);s.setAttribute("style","min-width:640px");
+  // header
+  s.appendChild(el("text",{x:8,y:head-10,class:"axis-txt","font-weight":700,fill:"var(--ink-2)","font-size":11},"Purchase month"));
+  colNames.forEach((c,i)=>s.appendChild(el("text",{x:lw+i*cw+cw/2,y:head-10,"text-anchor":"middle",class:"axis-txt","font-weight":700,fill:"var(--ink-2)","font-size":11},c+" renewal")));
+  const activeYear=state.year, activeQ=state.quarter;
+  RAW.forEach((d,r)=>{
+    const y=head+r*ch;
+    const dim=(activeYear!=="all"&&d.y!=+activeYear)||(activeQ!=="all"&&d.q!=+activeQ);
+    const g=el("g",{class:dim?"dim":""});
+    // row label
+    g.appendChild(el("text",{x:8,y:y+ch/2+4,class:"axis-txt tnum",fill:"var(--ink-2)","font-size":11,"font-weight":d.mi===0?700:500},d.full));
+    cols.forEach((k,ci)=>{
+      const v=d[k];const x=lw+ci*cw;
+      const rect=el("rect",{x:x+1,y:y+1,width:cw-3,height:ch-3,rx:5,fill:v==null?"transparent":heatColor(v),stroke:v==null?"var(--hair)":"none","stroke-dasharray":v==null?"3 3":"none","stroke-width":v==null?1:0});
+      g.appendChild(rect);
+      if(v!=null){
+        const lum=v>=24?"#fff":"var(--ink)";
+        g.appendChild(el("text",{x:x+cw/2,y:y+ch/2+4,"text-anchor":"middle","font-size":11,"font-weight":650,fill:v>=24?"#fff":"var(--ink)","font-family":"var(--sans)"},v+"%"));
+        const rnk=d.rank?`Rank ${d.rank}/${RANKED.length} by 1st renewal`:"";
+        bindTip(rect,`<b>${d.full} · ${colNames[ci]} renewal</b><br>Retention: ${v}% of original purchase<br>Cohort depth: ${d.depth}/4 stages<br>${ci===0?rnk:""}`);
+      }else{
+        bindTip(rect,`<b>${d.full} · ${colNames[ci]} renewal</b><br><span style="color:#bbb">Blank — stage not yet reached / no data.</span><br>Never counted as zero.`);
+      }
+    });
+    s.appendChild(g);
+  });
+  host.appendChild(s);
+  // legend
+  const lg=$("#heatLegend");lg.innerHTML="";
+  [["0–3%","--heat-1"],["3–8%","--heat-2"],["8–15%","--heat-3"],["15–24%","--heat-4"],["24–32%","--heat-5"],["32%+","--heat-6"]].forEach(([t,c])=>{
+    lg.innerHTML+=`<span class="li"><span class="sw" style="background:${cssv(c)}"></span>${t}</span>`;});
+  lg.innerHTML+=`<span class="li"><span class="sw" style="background:transparent;border:1px dashed var(--hair)"></span>blank</span>`;
+}
+
+/* ============================================================
+   BEST/WORST + DEPTH
+   ============================================================ */
+function renderBestWorst(){
+  const top=RANKED.slice(0,5),bot=RANKED.slice(-5).reverse();
+  const data=[...top.map(d=>({label:d.full,value:d.r1,color:"var(--good)",tip:`<b>${d.full}</b><br>1st renewal ${d.r1}% · rank ${d.rank}`})),
+    {label:"",value:0,color:"transparent",vlabel:"",tip:""},
+    ...bot.map(d=>({label:d.full,value:d.r1,color:"var(--crit)",tip:`<b>${d.full}</b><br>1st renewal ${d.r1}% · rank ${d.rank}`}))];
+  barChart($("#bestWorst"),data,{horiz:true,w:520,h:data.length*28+16,labelW:80,vmax:40});
+}
+function renderDepth(){
+  const data=RAW.filter(d=>d.r1!=null).map(d=>({label:d.label,value:d.depth*25,depth:d.depth,
+    color:d.depth>=3?"var(--good)":d.depth===2?"var(--warn)":"var(--serious)",vlabel:d.depth+"",
+    tip:`<b>${d.full}</b><br>Reaches ${d.depth} renewal stage(s)<br>r1 ${d.r1}%${d.r2!=null?`, r2 ${d.r2}%`:""}${d.r3!=null?`, r3 ${d.r3}%`:""}${d.r4!=null?`, r4 ${d.r4}%`:""}`}));
+  barChart($("#depthChart"),data,{w:520,h:220,vmax:100,valTop:false});
+}
+
+/* ============================================================
+   RETENTION ANALYTICS
+   ============================================================ */
+function movingAvg(series,win){
+  if(!win)return null;return series.map((p,i)=>{const s=Math.max(0,i-win+1);const sl=series.slice(s,i+1).map(x=>x.y);return{x:p.x,y:mean(sl)};});
+}
+function renderMainTrend(){
+  const stage=state.stage;$("#stageName").textContent=STAGE_NAME[stage];
+  $("#trendTitle").textContent=`Monthly ${STAGE_NAME[stage]} Trend`;
+  const scope=filtered().filter(d=>d[stage]!=null);
+  const pts=scope.map(d=>({x:d.i,y:d[stage],tip:`<b>${d.full}</b><br>${STAGE_NAME[stage]}: ${d[stage]}%`}));
+  if(pts.length<2){$("#mainTrend").innerHTML='<div class="callout note" style="margin:8px 0"><span class="i">i</span><div>Not enough observed points for this stage in the current filter to draw a trend.</div></div>';return;}
+  const series=[{color:"var(--accent)",pts,endLabel:pts[pts.length-1].y+"%"}];
+  const lr=linreg(pts.map(p=>({x:p.x,y:p.y})));
+  series.push({color:"var(--muted)",pts:pts.map(p=>({x:p.x,y:clamp(lr.a+lr.b*p.x,0,100)})),dash:"5 4",width:1.5,dots:false});
+  if(state.roll>0){const ma=movingAvg(pts,+state.roll);if(ma)series.push({color:"var(--s3)",pts:ma,width:2,dots:false});}
+  const labels=scope.map(d=>d.label);
+  lineChart($("#mainTrend"),series.map(se=>({...se,pts:se.pts.map((p,i)=>({...p,x:i}))})),{xLabels:labels,ymax:Math.max(10,Math.ceil(Math.max(...pts.map(p=>p.y))/5)*5),padR:44});
+  $("#trendSub").innerHTML=`Trend slope: <b>${lr.b.toFixed(2)} pt/month</b> · ${lr.b<0?'<span style="color:var(--crit-ink)">declining</span>':'<span style="color:var(--good-ink)">rising</span>'} ${state.roll>0?`· ${state.roll}-mo moving average shown`:""}`;
+  // legend
+  const lg=$("#retLegend");lg.innerHTML=`<span class="li"><span class="ln" style="background:var(--accent)"></span>Observed (fact)</span><span class="li"><span class="ln" style="background:var(--muted)"></span>Linear trend</span>${state.roll>0?`<span class="li"><span class="ln" style="background:var(--s3)"></span>${state.roll}-mo avg</span>`:""}`;
+}
+function renderStackArea(){
+  const scope=RAW.filter(d=>d.r1!=null);const labels=scope.map(d=>d.label);
+  // stacked: r1 base, plus r2,r3,r4 as separate lines (share of original). Use overlay lines not true stack to avoid double count.
+  const mk=(k,c)=>({color:c,area:true,dots:false,width:2,pts:scope.map((d,i)=>({x:i,y:d[k]||0,tip:`<b>${d.full}</b><br>${STAGE_NAME[k]}: ${d[k]==null?'—':d[k]+'%'}`}))});
+  lineChart($("#stackArea"),[mk("r1","var(--s1)"),mk("r2","var(--s2)"),mk("r3","var(--s3)"),mk("r4","var(--s4)")],{xLabels:labels,ymax:40});
+  const host=$("#stackArea");const lg=document.createElement("div");lg.className="legend";lg.style.marginTop="8px";
+  lg.innerHTML=`<span class="li"><span class="sw" style="background:var(--s1)"></span>1st</span><span class="li"><span class="sw" style="background:var(--s2)"></span>2nd</span><span class="li"><span class="sw" style="background:var(--s3)"></span>3rd</span><span class="li"><span class="sw" style="background:var(--s4)"></span>4th</span>`;
+  host.appendChild(lg);
+}
+function renderChurnTrend(){
+  const scope=RAW.filter(d=>d.churn!=null);const labels=scope.map(d=>d.label);
+  const pts=scope.map((d,i)=>({x:i,y:d.churn,tip:`<b>${d.full}</b><br>Churn ${d.churn}% · 1st renewal ${d.r1}%`}));
+  lineChart($("#churnTrend"),[{color:"var(--crit)",pts,area:true,endLabel:pts[pts.length-1].y+"%"}],{xLabels:labels,ymax:100,ymin:60});
+}
+function renderScatter(){
+  const host=$("#scatter");host.innerHTML="";const W=520,H=240,pad={l:36,r:16,t:12,b:30};
+  const s=svg(W,H);const data=RAW.filter(d=>d.r1!=null&&d.r2!=null);
+  const xmax=40,ymax=30;
+  const X=v=>pad.l+v/xmax*(W-pad.l-pad.r),Y=v=>H-pad.b-v/ymax*(H-pad.t-pad.b);
+  for(let i=0;i<=4;i++){const gy=pad.t+i*(H-pad.t-pad.b)/4;s.appendChild(el("line",{x1:pad.l,y1:gy,x2:W-pad.r,y2:gy,class:"gridline"}));s.appendChild(el("text",{x:pad.l-6,y:gy+3,"text-anchor":"end",class:"axis-txt tnum"},Math.round(ymax-ymax*i/4)+"%"));}
+  for(let i=0;i<=4;i++){const gx=pad.l+i*(W-pad.l-pad.r)/4;s.appendChild(el("text",{x:gx,y:H-10,"text-anchor":"middle",class:"axis-txt tnum"},Math.round(xmax*i/4)+"%"));}
+  s.appendChild(el("text",{x:W/2,y:H-1,"text-anchor":"middle",class:"axis-txt","font-size":10,fill:"var(--muted)"},"1st renewal →"));
+  // regression line
+  const lr=linreg(data.map(d=>({x:d.r1,y:d.r2})));
+  s.appendChild(el("line",{x1:X(0),y1:Y(clamp(lr.a,0,ymax)),x2:X(xmax),y2:Y(clamp(lr.a+lr.b*xmax,0,ymax)),stroke:"var(--muted)","stroke-width":1.5,"stroke-dasharray":"5 4"}));
+  data.forEach(d=>{const c=el("circle",{cx:X(d.r1),cy:Y(d.r2),r:5,fill:"var(--accent)","fill-opacity":.75,stroke:"var(--surface)","stroke-width":1.5});
+    bindTip(c,`<b>${d.full}</b><br>1st renewal ${d.r1}% · 2nd renewal ${d.r2}%`);s.appendChild(c);});
+  host.appendChild(s);
+  const cap=document.createElement("div");cap.className="footnote";cap.innerHTML=`Positive relationship (slope ${lr.b.toFixed(2)}): cohorts with stronger first renewals also retain better at the second — loyalty is set early.`;host.appendChild(cap);
+}
+function renderVelocity(){
+  const scope=RAW.filter(d=>d.r1!=null);
+  const data=scope.map((d,i)=>{const prev=i>0?scope[i-1].r1:null;const ch=prev==null?0:d.r1-prev;
+    return{label:d.label,value:ch,color:ch>=0?"var(--good)":"var(--crit)",vlabel:(ch>0?"+":"")+ch,tip:`<b>${d.full}</b><br>MoM change: ${ch>0?"+":""}${ch} pt<br>1st renewal ${d.r1}%`};});
+  barChart($("#velocity"),data,{w:520,h:220,min:-20,vmax:20,valTop:false});
+}
+
+/* ============================================================
+   FUNNEL
+   ============================================================ */
+function matureFunnel(){
+  const mat=RAW.filter(d=>d.y===2024&&["Jun","Jul","Aug","Sep","Oct","Nov"].includes(d.m));
+  const r1=mean(vals(mat,"r1")),r2=mean(vals(mat,"r2")),r3=mean(vals(mat,"r3")),r4=mean(vals(mat,"r4"));
+  return {r1,r2,r3,r4,n:mat.length,
+    c12:(r2/r1*100).toFixed(0),c23:(r3/r2*100).toFixed(0),c34:r4!=null?(r4/r3*100).toFixed(0):null};
+}
+function renderFunnels(){
+  const fm=matureFunnel();
+  const stages=[["New Purchase",100,"var(--accent)"],["1st Renewal",fm.r1,"var(--s1)"],["2nd Renewal",fm.r2,"var(--s2)"],["3rd Renewal",fm.r3,"var(--s3)"],["4th Renewal",fm.r4,"var(--s4)"]];
+  const host=$("#funnelMature");host.innerHTML="";const W=560,rowH=44,H=stages.length*rowH+10;const s=svg(W,H);
+  const LBL=120, AW=W-LBL-64; // label column + right room for value label
+  stages.forEach((st,i)=>{const y=8+i*rowH;const w=(st[1]/100)*AW;const x=LBL+(AW-w)/2;
+    s.appendChild(el("text",{x:LBL-8,y:y+rowH/2,"text-anchor":"end",class:"axis-txt",fill:"var(--ink-2)","font-size":11,"font-weight":600},st[0]));
+    const r=el("rect",{x:x,y:y+6,width:Math.max(4,w),height:rowH-16,rx:5,fill:st[2]});
+    bindTip(r,`<b>${st[0]}</b><br>${st[1].toFixed(1)}% of original purchasers<br>Maturity-matched (${fm.n} cohorts, 2024)`);s.appendChild(r);
+    s.appendChild(el("text",{x:x+w+8,y:y+rowH/2,class:"axis-txt tnum","font-weight":700,fill:"var(--ink)","font-size":12},Math.round(st[1])+"%"));
+    if(i>0){const drop=stages[i-1][1]-st[1];s.appendChild(el("text",{x:x-8,y:y+rowH/2,"text-anchor":"end",class:"axis-txt tnum","font-size":9.5,fill:"var(--crit-ink)"},"−"+Math.round(drop)));}
+  });
+  host.appendChild(s);
+  // conversion
+  const conv=[["Purchase → 1st",Math.round(fm.r1),"var(--s1)"],["1st → 2nd",+fm.c12,"var(--s2)"],["2nd → 3rd",+fm.c23,"var(--s3)"]];
+  barChart($("#funnelConv"),conv.map(c=>({label:c[0],value:c[1],color:c[2],vlabel:c[1]+"%",tip:`<b>${c[0]} conversion</b><br>${c[1]}% of the prior stage renews again`})),{horiz:true,w:520,h:130,labelW:110,vmax:100});
+}
+function renderWaterfall(){
+  const fm=matureFunnel();
+  const host=$("#waterfall");host.innerHTML="";
+  const steps=[["Purchase",0,100],["Lost pre-1st",100,fm.r1],["Lost 1→2",fm.r1,fm.r2],["Lost 2→3",fm.r2,fm.r3],["Retained 3rd",fm.r3,fm.r3]];
+  const W=760,H=220,pad={l:30,r:16,t:14,b:34},bw=Math.min(60,(W-pad.l-pad.r)/steps.length-16);
+  const s=svg(W,H);const Y=v=>H-pad.b-v/100*(H-pad.t-pad.b);
+  for(let i=0;i<=4;i++){const gy=pad.t+i*(H-pad.t-pad.b)/4;s.appendChild(el("line",{x1:pad.l,y1:gy,x2:W-pad.r,y2:gy,class:"gridline"}));s.appendChild(el("text",{x:pad.l-4,y:gy+3,"text-anchor":"end",class:"axis-txt tnum"},Math.round(100-100*i/4)+"%"));}
+  steps.forEach((st,i)=>{
+    const x=pad.l+i*((W-pad.l-pad.r)/steps.length)+((W-pad.l-pad.r)/steps.length-bw)/2;
+    const top=Math.max(st[1],st[2]),bot=Math.min(st[1],st[2]);
+    let color,y,h,lbl;
+    if(i===0){color="var(--accent)";y=Y(100);h=Y(0)-Y(100);lbl="100%";}
+    else if(i===steps.length-1){color="var(--good)";y=Y(st[2]);h=Y(0)-Y(st[2]);lbl=st[2].toFixed(0)+"%";}
+    else{color="var(--crit)";y=Y(top);h=Y(bot)-Y(top);lbl="−"+(st[1]-st[2]).toFixed(0);}
+    const r=el("rect",{x,y,width:bw,height:Math.max(2,h),rx:4,fill:color,"fill-opacity":i===0||i===steps.length-1?1:.85});
+    bindTip(r,`<b>${st[0]}</b><br>${i===0?"100 customers enter":i===steps.length-1?st[2].toFixed(1)+"% remain loyal":(st[1]-st[2]).toFixed(1)+" of every 100 lost here"}`);
+    s.appendChild(r);
+    s.appendChild(el("text",{x:x+bw/2,y:y-5,"text-anchor":"middle",class:"axis-txt tnum","font-size":10,"font-weight":700,fill:"var(--ink-2)"},lbl));
+    s.appendChild(el("text",{x:x+bw/2,y:H-18,"text-anchor":"middle",class:"axis-txt","font-size":9.5},st[0]));
+  });
+  host.appendChild(s);
+}
+
+/* ============================================================
+   PERIODS
+   ============================================================ */
+function renderPeriods(){
+  const yrs=[2024,2025,2026].map(y=>({y,v:mean(vals(RAW.filter(d=>d.y===y),"r1")),n:RAW.filter(d=>d.y===y&&d.r1!=null).length}));
+  barChart($("#yearBars"),yrs.map(o=>({label:o.y+(o.y===2026?" *":""),value:round(o.v),vlabel:o.v.toFixed(0)+"%",color:o.y===2024?"var(--good)":o.y===2025?"var(--warn)":"var(--crit)",tip:`<b>${o.y}</b><br>Avg 1st renewal ${o.v.toFixed(1)}%<br>${o.n} observed cohorts${o.y===2026?" (partial year)":""}`})),{w:520,h:220,vmax:32});
+  // quarter heatmap
+  const host=$("#qHeat");host.innerHTML="";
+  const years=[2024,2025,2026],qs=[1,2,3,4];
+  const cw=86,ch=40,lw=44,head=22,W=lw+cw*4,H=head+years.length*ch+6;
+  const s=svg(W,H);
+  qs.forEach((q,i)=>s.appendChild(el("text",{x:lw+i*cw+cw/2,y:head-6,"text-anchor":"middle",class:"axis-txt","font-weight":700,"font-size":10.5},"Q"+q)));
+  years.forEach((y,r)=>{
+    s.appendChild(el("text",{x:6,y:head+r*ch+ch/2+4,class:"axis-txt tnum","font-weight":700,"font-size":11},y));
+    qs.forEach((q,ci)=>{const set=RAW.filter(d=>d.y===y&&d.q===q&&d.r1!=null);const v=set.length?mean(set.map(d=>d.r1)):null;
+      const x=lw+ci*cw,yy=head+r*ch;
+      const rect=el("rect",{x:x+2,y:yy+2,width:cw-4,height:ch-4,rx:5,fill:v==null?"transparent":heatColor(v),stroke:v==null?"var(--hair)":"none","stroke-dasharray":v==null?"3 3":"none"});
+      s.appendChild(rect);
+      if(v!=null){s.appendChild(el("text",{x:x+cw/2,y:yy+ch/2+4,"text-anchor":"middle","font-size":12,"font-weight":700,fill:v>=24?"#fff":"var(--ink)"},v.toFixed(0)+"%"));
+        bindTip(rect,`<b>Q${q} ${y}</b><br>Avg 1st renewal ${v.toFixed(1)}%<br>${set.length} cohorts`);}
+      else bindTip(rect,`<b>Q${q} ${y}</b><br><span style="color:#bbb">No cohorts in this period.</span>`);
+    });
+  });
+  host.appendChild(s);
+  // period stats
+  const bestQ={l:"",v:-1},worstQ={l:"",v:999};
+  years.forEach(y=>qs.forEach(q=>{const set=RAW.filter(d=>d.y===y&&d.q===q&&d.r1!=null);if(set.length){const v=mean(set.map(d=>d.r1));if(v>bestQ.v){bestQ.v=v;bestQ.l=`Q${q} ${y}`;}if(v<worstQ.v){worstQ.v=v;worstQ.l=`Q${q} ${y}`;}}}));
+  $("#periodStats").innerHTML=`
+    <div class="stat"><div class="sl">Best quarter</div><div class="sv">${bestQ.l}</div><div class="sm">${bestQ.v.toFixed(0)}% avg 1st renewal</div></div>
+    <div class="stat"><div class="sl">Worst quarter</div><div class="sv">${worstQ.l}</div><div class="sm">${worstQ.v.toFixed(0)}% avg 1st renewal</div></div>
+    <div class="stat"><div class="sl">Best year</div><div class="sv">2024</div><div class="sm">28.6% avg 1st renewal</div></div>
+    <div class="stat"><div class="sl">QoQ (latest full)</div><div class="sv" style="color:var(--crit-ink)">▼</div><div class="sm">persistent decline</div></div>`;
+}
+
+/* ============================================================
+   FORECAST
+   ============================================================ */
+function renderForecast(){
+  const obs=RAW.filter(d=>d.r1!=null);
+  const series=obs.map(d=>d.r1);
+  const lastI=obs[obs.length-1].i;              // 23 = May 2026 (freshest, provisional)
+  // PRIMARY = level forecast via simple exponential smoothing.
+  // Rationale: the rate is bounded at 0 and has demonstrably FLATTENED since mid-2025
+  // (2025-H2 & 2026 both ~8-12%). Linear/Holt trend extrapolation predicts implausible
+  // negatives, so it is used only to DESCRIBE the historical trend, not to forecast.
+  const L=sesForecast(series,0.2);
+  const last12=series.slice(-12);
+  const baseline=mean(last12);
+  const sigma=std(last12);
+  const lr=linreg(obs.map(d=>({x:d.i,y:d.r1}))); // descriptive trend (fact) only
+  const horizon=12;
+  const fc=[],bandUp=[],bandLo=[];
+  for(let k=1;k<=horizon;k++){
+    const x=lastI+k;
+    const hw=1.28*sigma*(0.6+0.06*k);           // 80% band, widening with horizon
+    fc.push({x,y:L,k}); bandUp.push({x,y:clamp(L+hw,0,100)}); bandLo.push({x,y:clamp(L-hw,0,100)});
+  }
+  // month labels across observed + horizon
+  const monthsAll=[]; {let yy=2024,mm=5; for(let t=0;t<40;t++){monthsAll.push(MONTHS_ORDER[mm]+" "+String(yy).slice(2)); mm++; if(mm>11){mm=0;yy++;}}}
+  const idx=[...obs.map(d=>d.i),...fc.map(f=>f.x)];
+  const labels=idx.map(i=>monthsAll[i]||"");
+  const remap=i=>idx.indexOf(i);
+  const obsSeries={color:"var(--accent)",pts:obs.map(d=>({x:remap(d.i),y:d.r1,tip:`<b>${d.full}</b><br>Observed 1st renewal ${d.r1}%`+(d.i===lastI?"<br><span style='color:#f0a0a0'>Provisional — freshest cohort, renewal window likely still open.</span>":"")})),endLabel:""};
+  const fcSeries={color:"var(--s4)",dash:"6 4",width:2,dots:false,pts:[{x:remap(lastI),y:L},...fc.map(f=>({x:remap(f.x),y:f.y,tip:`<b>${monthsAll[f.x]}</b><br>Level forecast <b>${f.y.toFixed(1)}%</b> <span style='color:#bbb'>(AI)</span><br>80% interval ${bandLo[f.k-1].y.toFixed(1)}–${bandUp[f.k-1].y.toFixed(1)}%`}))],endLabel:L.toFixed(1)+"%"};
+  const band={up:[{x:remap(lastI),y:L},...bandUp.map(b=>({x:remap(b.x),y:b.y}))],lo:[{x:remap(lastI),y:L},...bandLo.map(b=>({x:remap(b.x),y:b.y}))]};
+  lineChart($("#forecastChart"),[obsSeries,fcSeries],{xLabels:labels,ymax:40,band,bandColor:"var(--s4)",maxX:14,padR:48});
+  // legend
+  const fl=document.createElement("div");fl.className="legend";fl.style.marginTop="8px";
+  fl.innerHTML=`<span class="li"><span class="ln" style="background:var(--accent)"></span>Observed (fact)</span><span class="li"><span class="ln" style="background:var(--s4)"></span>Level forecast (AI)</span><span class="li"><span class="sw" style="background:var(--s4);opacity:.3"></span>80% interval</span>`;
+  $("#forecastChart").appendChild(fl);
+  // cards
+  const conv12=mean(RAW.filter(d=>d.r1!=null&&d.r2!=null).map(d=>d.r2/d.r1));
+  const downside=clamp(L+lr.b*6,0,100); // if the historical decline rate RESUMED
+  const cards=[
+    ["6-mo forecast · 1st renewal",L.toFixed(1)+"%",`80% CI ${bandLo[5].y.toFixed(1)}–${bandUp[5].y.toFixed(1)}%`,"var(--s4)","Level forecast · SES α=0.2"],
+    ["12-mo forecast · 1st renewal",L.toFixed(1)+"%",`80% CI ${bandLo[11].y.toFixed(1)}–${bandUp[11].y.toFixed(1)}%`,"var(--s4)","Stabilized-baseline model"],
+    ["Recent stabilized baseline",baseline.toFixed(1)+"%","mean of last 12 cohorts","var(--accent)","Forecast anchor (fact)"],
+    ["Expected churn (6-mo)",(100-L).toFixed(1)+"%","100 − forecast 1st renewal","var(--crit)","If no intervention"],
+    ["Expected 2nd renewal (6-mo)",(L*conv12).toFixed(1)+"%","forecast × avg 1→2 conversion","var(--s2)","Derived"],
+    ["Downside scenario","≈ "+downside.toFixed(1)+"%","if 2024→25 decline resumes","var(--warn)","Historical slope applied"]
+  ];
+  const g=$("#forecastCards");g.innerHTML="";
+  cards.forEach(c=>{const d=document.createElement("div");d.className="kpi";
+    d.innerHTML=`<div class="stripe" style="background:${c[3]}"></div><div class="kl">${c[0]}<span class="chip ai" style="margin-left:auto">AI</span></div><div class="kv tnum" style="font-size:24px">${c[1]}</div><div class="ksub">${c[2]} · <span style="color:var(--muted)">${c[4]}</span></div>`;
+    g.appendChild(d);});
+  // method box
+  $("#methodBox").innerHTML=`
+    <div class="row" style="display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--hair);font-size:12.5px"><div class="k" style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase">Primary</div><div><b>Simple exponential smoothing</b> (α=0.2) on ${obs.length} observed monthly values → level <b>${L.toFixed(1)}%</b>. Chosen because the series has <i>no persistent trend in its recent regime</i> — it stabilized after the 2024→2025 step-down.</div></div>
+    <div class="row" style="display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--hair);font-size:12.5px"><div class="k" style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase">Why not trend</div><div>OLS slope is <b>${lr.b.toFixed(2)} pt/mo</b> (descriptive fact), but linear/Holt extrapolation drives the bounded rate below 0% within months — implausible. The decline decelerated; we forecast the <i>level</i>, and carry the resumed-decline case as an explicit downside.</div></div>
+    <div class="row" style="display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--hair);font-size:12.5px"><div class="k" style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase">Interval</div><div>80% band = level ± 1.28·σ·(0.6+0.06·h), widening with horizon h. Recent volatility σ = <b>${sigma.toFixed(1)}pt</b> (std of last 12 cohorts).</div></div>
+    <div class="row" style="display:grid;grid-template-columns:118px 1fr;gap:8px;padding:6px 0;font-size:12.5px"><div class="k" style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase">Assumptions</div><div>No structural change (pricing, product, acquisition mix) and no retention intervention. May 2026 treated as provisional (censored). Values floored at 0%. Confidence: <b>Low–Moderate</b>.</div></div>`;
+}
+
+/* ============================================================
+   RED-FLAG ENGINE
+   ============================================================ */
+function renderFlags(){
+  const flags=[];const M=metrics(RAW);const h=healthScore();const fm=matureFunnel();
+  // rule: declining trend
+  flags.push({sev:"crit",title:"First-renewal rate is in structural decline",
+    impact:"Shrinking loyal base; compounding revenue drag over time.",
+    cohorts:"2025-H2 → 2026 (persistent single digits)",
+    cause:"Blend of genuine retention weakening and onboarding/first-value gap; recent cohorts also partly immature.",
+    action:"Treat first-renewal rate as a P0 company metric; instrument and intervene on the pre-first-renewal journey.",
+    evidence:`Slope ${h.slope.toFixed(2)} pt/mo; 2024 avg 28.6% → 2026 avg 6.8%.`});
+  // rule: high churn
+  flags.push({sev:"crit",title:"~83% first-cycle churn",
+    impact:"Five of six new customers never return — acquisition ROI is severely diluted.",
+    cohorts:"All cohorts",
+    cause:"Value not realized before the renewal decision; weak renewal prompts.",
+    action:"Redesign onboarding to deliver a felt result before renewal; add decision-moment save-plays.",
+    evidence:`Avg 1st renewal ${M.avgR1.toFixed(1)}% → churn ${M.avgChurn.toFixed(1)}%.`});
+  // rule: largest renewal drop
+  flags.push({sev:"serious",title:"Largest leak is at the very first step",
+    impact:"The funnel loses ~71 of every 100 mature customers before the first renewal.",
+    cohorts:"Maturity-matched 2024 cohorts",
+    cause:"Entry into the loyalty loop is the bottleneck — deeper stages convert well.",
+    action:"Concentrate spend on Purchase→1st renewal; deep-funnel loyalty is already healthy.",
+    evidence:`Mature funnel 100%→${fm.r1.toFixed(0)}%; deeper conversion rises (${fm.c23}% at 2nd→3rd).`});
+  // rule: weak recent cohorts
+  const weak=RAW.filter(d=>d.r1!=null&&d.r1<=8&&d.y>=2025);
+  flags.push({sev:"serious",title:`${weak.length} cohorts at ≤8% first renewal`,
+    impact:"A widening band of near-non-renewing cohorts.",
+    cohorts:weak.map(d=>d.label).join(", "),
+    cause:"Acquisition-quality shift and/or seasonal softness after 2024.",
+    action:"Segment these cohorts' acquisition sources; pause or fix the weakest channels.",
+    evidence:`Feb '25 8%, Aug '25 8%, Sep '25 8%, Dec '25 8% … (fact).`});
+  // rule: seasonality
+  flags.push({sev:"warn",title:"Possible seasonality / regime shift",
+    impact:"If seasonal, planning must account for predictable weak windows.",
+    cohorts:"Q4-2024 strong vs mid-2025 onward weak",
+    cause:"Two years is too short to confirm seasonality vs a one-time regime change.",
+    action:"Tag cohorts by campaign/season; revisit after 12 more months of data.",
+    evidence:`Q4-2024 avg r1 29% vs Q3-2025 9%.`});
+  // rule: forecast risk
+  flags.push({sev:"warn",title:"Forecast reliability is limited",
+    impact:"Point forecasts could mislead if quoted without the interval.",
+    cohorts:"n/a (methodological)",
+    cause:"Short series, structural break, right-censoring of recent cohorts.",
+    action:"Always quote the 80% band; refresh monthly; don't over-index on a single number.",
+    evidence:`~24 points; recent cohorts immature.`});
+  // rule: shallow depth
+  flags.push({sev:"warn",title:"Very few cohorts reach deep renewals",
+    impact:"The loyal core is small in absolute terms despite high stickiness.",
+    cohorts:"Only Aug & Sep 2024 reach 4th renewal",
+    cause:"Too few customers enter the loyalty loop (first-renewal bottleneck).",
+    action:"Grow the top of the loyalty funnel; the deep funnel already performs.",
+    evidence:`4th renewal observed in 2 of 25 cohorts.`});
+
+  const list=$("#flagList");list.innerHTML="";
+  const order={crit:0,serious:1,warn:2,good:3};
+  flags.sort((a,b)=>order[a.sev]-order[b.sev]);
+  const sevChip={crit:["crit","CRITICAL"],serious:["serious","SERIOUS"],warn:["warn","WARNING"],good:["good","OK"]};
+  flags.forEach(f=>{
+    const d=document.createElement("div");d.className="flag "+f.sev;
+    d.innerHTML=`<div class="flag-top"><h4>${f.title}</h4><span class="chip ${sevChip[f.sev][0]}"><span class="d" style="background:currentColor"></span>${sevChip[f.sev][1]}</span></div>
+      <div class="meta">
+        <div><div class="mlab">Business impact</div><div class="mval">${f.impact}</div></div>
+        <div><div class="mlab">Affected cohorts</div><div class="mval">${f.cohorts}</div></div>
+        <div><div class="mlab">Likely cause</div><div class="mval">${f.cause}</div></div>
+        <div><div class="mlab">Recommended action</div><div class="mval">${f.action}</div></div>
+      </div>
+      <div class="insight" style="border:none;box-shadow:none;padding:8px 0 0;background:none"><div class="ev" style="border-top:1px dashed var(--hair);width:100%;padding-top:6px"><b>Evidence (fact):</b> ${f.evidence}</div></div>`;
+    list.appendChild(d);
+  });
+  // counts
+  const c={crit:0,serious:0,warn:0};flags.forEach(f=>c[f.sev]++);
+  $("#riskCounts").innerHTML=`<span class="chip crit">${c.crit} Critical</span><span class="chip serious">${c.serious} Serious</span><span class="chip warn">${c.warn} Warning</span>`;
+}
+
+/* ============================================================
+   RECOMMENDATIONS
+   ============================================================ */
+const RECS=[
+  {cat:"Leadership",pri:0,title:"Make first-renewal rate a company-level P0 metric",problem:"Retention is the binding growth constraint but isn't governed as a top metric.",impact:"Every point of first renewal compounds into the loyal base and LTV.",rec:"Adopt first-renewal % as a board KPI with a named owner and weekly review; this dashboard is the reporting layer.",outcome:"Organizational focus shifts from acquisition volume to retained value.",kpi:"Overall 1st-renewal % (target: low-20s within 2 quarters)"},
+  {cat:"Customer Success",pri:0,title:"Re-engineer onboarding to deliver felt value before renewal",problem:"Customers churn before experiencing a result.",impact:"Directly attacks the ~71pt first-step leak.",rec:"Map the days-0-to-first-renewal journey; guarantee a measurable early win; add proactive check-ins for at-risk accounts.",outcome:"Higher first-renewal conversion, especially for new acquisition cohorts.",kpi:"Purchase→1st-renewal conversion"},
+  {cat:"Retention",pri:0,title:"Decision-moment save-plays at renewal",problem:"No visible prompt/offer at the renewal decision.",impact:"Recovers customers on the fence at the exact moment they decide.",rec:"Trigger reminder + tailored incentive + human touch in the renewal window; A/B test offer and timing.",outcome:"Lift in first-renewal without discounting the whole base.",kpi:"Renewal-window conversion; incremental renewals"},
+  {cat:"Sales",pri:1,title:"Re-weight acquisition toward high-retention sources",problem:"Post-2024 cohorts renew far worse — likely a mix shift.",impact:"Improves the quality, not just quantity, of new customers.",rec:"Attribute each cohort to acquisition source; shift spend to sources whose cohorts historically retain.",outcome:"New cohorts start closer to 2024-quality retention.",kpi:"1st-renewal % by acquisition source"},
+  {cat:"Operations",pri:1,title:"Stand up a weekly retention cadence",problem:"No operating rhythm around retention.",impact:"Turns insight into consistent action.",rec:"Weekly review of cohort health, at-risk lists, and save-play outcomes with clear owners.",outcome:"Faster detection and response to weak cohorts.",kpi:"Time-to-action on flagged cohorts"},
+  {cat:"Product",pri:1,title:"Close the early-value gap in the product/service",problem:"Value isn't landing fast enough to justify renewal.",impact:"Structural lift to retention across all cohorts.",rec:"Ship the fastest path to a visible result; remove first-cycle friction; instrument activation milestones.",outcome:"Higher activation → higher first renewal.",kpi:"Activation-milestone completion vs renewal"},
+  {cat:"Pricing",pri:1,title:"Test renewal packaging & price",problem:"Renewal friction may be partly commercial.",impact:"Could unlock renewals without harming acquisition.",rec:"A/B test renewal price points, terms, and bundles; consider a loyalty ladder rewarding repeat renewals.",outcome:"Optimized renewal offer; stronger deep-funnel loyalty.",kpi:"Renewal take-rate by price/packaging"},
+  {cat:"Support",pri:2,title:"Proactive outreach to at-risk cohorts",problem:"Weak cohorts get no differentiated attention.",impact:"Recovers a share of otherwise-lost customers.",rec:"Prioritize support/CS outreach to cohorts flagged weak by the risk engine.",outcome:"Improved renewal in targeted cohorts.",kpi:"Renewal lift in outreach vs control"},
+  {cat:"Marketing",pri:2,title:"Lifecycle nurture between purchase and renewal",problem:"Little engagement in the critical first window.",impact:"Keeps LeanR top-of-mind to the renewal decision.",rec:"Automated, value-led nurture sequence timed to the renewal window.",outcome:"Warmer renewal conversations; higher conversion.",kpi:"Engagement → renewal correlation"},
+  {cat:"Automation",pri:2,title:"Automate the renewal playbook",problem:"Manual processes don't scale across cohorts.",impact:"Consistent execution at volume.",rec:"Codify reminders, incentives, and escalations into an automated workflow.",outcome:"Every customer gets the save-play, reliably.",kpi:"Playbook coverage %"},
+  {cat:"AI",pri:2,title:"Predictive churn scoring",problem:"Interventions are reactive.",impact:"Enables proactive saves before churn.",rec:"Build a churn-risk score from behavioural + cohort features; feed at-risk lists to CS.",outcome:"Earlier, targeted intervention.",kpi:"Precision/recall of churn model; saved customers"},
+  {cat:"Data",pri:2,title:"Capture the missing dimensions",problem:"Dataset lacks revenue, cohort size, and acquisition source.",impact:"Unlocks revenue-at-risk, LTV, and source-level analysis.",rec:"Instrument ASP, cohort counts, and source tags; the revenue module here activates automatically once supplied.",outcome:"Full financial view of retention.",kpi:"Data completeness %"}
+];
+function renderRecs(){
+  const sel=$("#recCat");
+  if(!sel.dataset.init){const cats=["All",...Array.from(new Set(RECS.map(r=>r.cat)))];sel.innerHTML=cats.map(c=>`<option>${c}</option>`).join("");sel.dataset.init="1";}
+  const f=sel.value||"All";
+  const list=$("#recList");list.innerHTML="";
+  RECS.filter(r=>f==="All"||r.cat===f).sort((a,b)=>a.pri-b.pri).forEach((r,i)=>{
+    const priLbl=["P0 · Now","P1 · Next","P2 · Later"][r.pri];
+    const d=document.createElement("div");d.className="rec"+(i===0?" open":"");
+    d.innerHTML=`<div class="rec-h" onclick="this.parentNode.classList.toggle('open')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.parentNode.classList.toggle('open')}">
+        <span class="cat">${r.cat}</span><h4>${r.title}</h4><span class="pri p${r.pri}">${priLbl}</span><span style="color:var(--muted)">▾</span></div>
+      <div class="rec-b">
+        <div class="row"><div class="k">Problem</div><div>${r.problem}</div></div>
+        <div class="row"><div class="k">Impact</div><div>${r.impact}</div></div>
+        <div class="row"><div class="k">Recommendation</div><div>${r.rec}</div></div>
+        <div class="row"><div class="k">Expected outcome</div><div>${r.outcome}</div></div>
+        <div class="row"><div class="k">Success KPI</div><div><b>${r.kpi}</b></div></div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+/* ============================================================
+   DATA TABLE + REV STUB
+   ============================================================ */
+function renderDataTable(){
+  const body=$("#dataBody");body.innerHTML="";
+  const rows=RAW.filter(d=>state.year==="all"||d.y==+state.year);
+  let lastY=null;
+  rows.forEach(d=>{
+    const tr=document.createElement("tr");
+    const yr=d.y!==lastY;lastY=d.y;
+    const cell=v=>v==null?'<span class="blank-cell">—</span>':v+"%";
+    tr.className=yr?"year-band":"";
+    tr.innerHTML=`<td>${yr?`<b>${d.y}</b> · `:""}${d.m}</td>
+      <td class="tnum">100%</td>
+      <td class="tnum hl">${cell(d.r1)}</td>
+      <td class="tnum">${cell(d.r2)}</td>
+      <td class="tnum">${cell(d.r3)}</td>
+      <td class="tnum">${cell(d.r4)}</td>
+      <td class="tnum" style="color:var(--crit-ink)">${d.churn!=null?d.churn+"%":'<span class="blank-cell">—</span>'}</td>
+      <td class="tnum">${d.depth||'<span class="blank-cell">—</span>'}</td>
+      <td class="tnum">${d.rank?"#"+d.rank:'<span class="blank-cell">—</span>'}</td>`;
+    body.appendChild(tr);
+  });
+}
+function renderRevStub(){
+  const g=$("#revStub");g.innerHTML="";
+  ["Revenue","MRR","ARR","Revenue Lost","Revenue at Risk","Upsell Opportunity"].forEach(l=>{
+    const d=document.createElement("div");d.className="kpi";
+    d.innerHTML=`<div class="stripe" style="background:var(--hair)"></div><div class="kl">${l}</div><div class="kv" style="font-size:15px;font-weight:600" >—</div><div class="ksub na">Not available from uploaded dataset.</div>`;
+    g.appendChild(d);
+  });
+}
+
+/* ============================================================
+   EXPORTS
+   ============================================================ */
+function download(name,mime,content){
+  const blob=new Blob([content],{type:mime});const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function csvData(){
+  let out="Year,Month,New Purchase,1st Renewal,2nd Renewal,3rd Renewal,4th Renewal,Churn (post-1st),Depth,Rank\n";
+  RAW.forEach(d=>{const c=v=>v==null?"":v;out+=`${d.y},${d.m},100,${c(d.r1)},${c(d.r2)},${c(d.r3)},${c(d.r4)},${c(d.churn)},${d.depth||""},${d.rank||""}\n`;});
+  return out;
+}
+function exportCSV(){download("leanr-cohort-data.csv","text/csv;charset=utf-8",csvData());}
+function exportXLS(){
+  let t='<table border="1"><tr><th>Year</th><th>Month</th><th>New Purchase</th><th>1st Renewal</th><th>2nd Renewal</th><th>3rd Renewal</th><th>4th Renewal</th><th>Churn</th></tr>';
+  RAW.forEach(d=>{const c=v=>v==null?"":v+"%";t+=`<tr><td>${d.y}</td><td>${d.m}</td><td>100%</td><td>${c(d.r1)}</td><td>${c(d.r2)}</td><td>${c(d.r3)}</td><td>${c(d.r4)}</td><td>${d.churn!=null?d.churn+"%":""}</td></tr>`;});
+  t+='</table>';
+  download("leanr-cohort-data.xls","application/vnd.ms-excel",'<html><head><meta charset="utf-8"></head><body>'+t+'</body></html>');
+}
+function exportPNG(hostId,name){
+  const host=$("#"+hostId);const src=host.querySelector("svg");if(!src){alert("Chart not ready.");return;}
+  const clone=src.cloneNode(true);
+  const vb=src.getAttribute("viewBox").split(" ");const w=+vb[2],h=+vb[3],scale=2;
+  // inline computed colors
+  clone.setAttribute("width",w);clone.setAttribute("height",h);
+  const bg=cssv("--surface")||"#fff";
+  inlineColors(clone);
+  const xml=new XMLSerializer().serializeToString(clone);
+  const img=new Image();
+  const svg64="data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(xml)));
+  img.onload=function(){
+    const cv=document.createElement("canvas");cv.width=w*scale;cv.height=h*scale;const ctx=cv.getContext("2d");
+    ctx.fillStyle=bg;ctx.fillRect(0,0,cv.width,cv.height);ctx.scale(scale,scale);ctx.drawImage(img,0,0);
+    cv.toBlob(b=>{const url=URL.createObjectURL(b);const a=document.createElement("a");a.href=url;a.download=name+".png";a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);});
+  };
+  img.onerror=function(){alert("PNG export failed in this browser — use Print / Save as PDF instead.");};
+  img.src=svg64;
+}
+function inlineColors(node){
+  const map={"--surface":cssv("--surface"),"--ink":cssv("--ink"),"--ink-2":cssv("--ink-2"),"--muted":cssv("--muted"),"--hair":cssv("--hair"),
+    "--accent":cssv("--accent"),"--crit":cssv("--crit"),"--good":cssv("--good"),"--warn":cssv("--warn"),"--serious":cssv("--serious"),
+    "--s1":cssv("--s1"),"--s2":cssv("--s2"),"--s3":cssv("--s3"),"--s4":cssv("--s4"),"--crit-ink":cssv("--crit-ink"),"--ink":cssv("--ink")};
+  const attrs=["fill","stroke"];
+  node.querySelectorAll("*").forEach(n=>{
+    attrs.forEach(a=>{let v=n.getAttribute(a);if(v&&v.startsWith("var(")){const key=v.slice(4,-1).split(",")[0].trim();if(map[key])n.setAttribute(a,map[key]);}});
+    // classes -> resolve
+    if(n.classList.contains("gridline"))n.setAttribute("stroke",cssv("--hair"));
+    if(n.classList.contains("axis-txt"))n.setAttribute("fill",n.getAttribute("fill")&&n.getAttribute("fill").startsWith("var")?cssv("--muted"):(n.getAttribute("fill")||cssv("--muted")));
+  });
+}
+
+/* ============================================================
+   THEME + NAV + RENDER ORCHESTRATION
+   ============================================================ */
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute("data-theme");
+  const sysDark=matchMedia("(prefers-color-scheme:dark)").matches;
+  const next=cur? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+  document.documentElement.setAttribute("data-theme",next);
+  renderAll(); // recolor charts
+}
+function toggleNav(open){$("#sidebar").classList.toggle("open",open);$("#scrim").classList.toggle("on",open);}
+function resetFilters(){state.year="all";state.quarter="all";state.stage="r1";state.roll=0;
+  $("#fY").value="all";$("#fQ").value="all";$("#fS").value="r1";$("#fR").value="0";renderReactive();}
+function renderReactive(){ // filter-sensitive
+  renderKPIs();renderMainTrend();renderCohortTriangle();renderDataTable();
+}
+function renderAll(){
+  renderHero();renderGauges();renderLeadRead();renderKPIs();
+  renderCohortTriangle();renderBestWorst();renderDepth();
+  renderMainTrend();renderStackArea();renderChurnTrend();renderScatter();renderVelocity();
+  renderFunnels();renderWaterfall();renderPeriods();renderForecast();
+  renderFlags();renderInsights();renderRootCause();renderPlans();renderRecs();
+  renderDataTable();renderRevStub();
+}
+
+/* filter listeners */
+$("#fY").addEventListener("change",e=>{state.year=e.target.value;renderReactive();});
+$("#fQ").addEventListener("change",e=>{state.quarter=e.target.value;renderReactive();});
+$("#fS").addEventListener("change",e=>{state.stage=e.target.value;renderMainTrend();});
+$("#fR").addEventListener("change",e=>{state.roll=+e.target.value;renderMainTrend();});
+
+/* scrollspy */
+const secs=$$("section.view");const navLinks=$$(".nav a");
+const spy=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){
+  const id=en.target.id;navLinks.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));
+  const crumb=$("#crumb");const active=$(".nav a.active");if(active)crumb.textContent=active.textContent.trim();
+}});},{rootMargin:"-40% 0px -55% 0px"});
+secs.forEach(s=>spy.observe(s));
+navLinks.forEach(a=>a.addEventListener("click",()=>{if(innerWidth<=1180)toggleNav(false);}));
+
+/* go */
+renderAll();
+</script>
+
+</body>
+</html>
